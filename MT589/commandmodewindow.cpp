@@ -6,6 +6,57 @@
 #include <QBrush>
 #include <createisa.h>
 
+void CommandModeWindow::setupCommandPool() {
+    size_t read_commands_counter = 0;
+
+    for (size_t col = 0; col < 16; ++col) {
+        for (size_t row = 0; row < 32; ++row) {
+            auto mc = mk.rom.memory[row][col];
+            if (!mc.is_command_entrypoint) {
+                continue;
+            }
+
+            std::vector<std::shared_ptr<QTableWidgetItem>> command_description;
+
+            QTableWidgetItem* item1 = new QTableWidgetItem();
+            command_description.push_back(std::shared_ptr<QTableWidgetItem>(item1));
+            item1->setText(("r" + std::to_string(row) + "-c" + std::to_string(col)).c_str());
+            item1->setTextAlignment(Qt::AlignCenter);
+
+            QTableWidgetItem* item2 = new QTableWidgetItem();
+            command_description.push_back(std::shared_ptr<QTableWidgetItem>(item2));
+
+            std::stringstream ss;
+            ss << std::bitset<8>(mc.command_code);
+            item2->setText(ss.str().c_str());
+            item2->setTextAlignment(Qt::AlignCenter);
+
+            QTableWidgetItem* item3 = new QTableWidgetItem();
+            command_description.push_back(std::shared_ptr<QTableWidgetItem>(item3));
+            auto tag = mc.tag;
+            item3->setText(tag.c_str());
+            item3->setTextAlignment(Qt::AlignCenter);
+
+            command_pool.push_back(command_description);
+            command_code_to_cell_address.insert({mc.command_code, {row, col}});
+            ++read_commands_counter;
+        }
+    }
+}
+
+void CommandModeWindow::displayCommandPool() {
+    ui->commandPoolTableWidget->setHorizontalHeaderLabels({"Адрес вызова", "Код", "Имя"});
+    ui->commandPoolTableWidget->horizontalHeader()->sectionResizeMode(QHeaderView::Fixed);
+    size_t read_commands_counter = 0;
+
+    for (auto& command_info: command_pool) {
+        ui->commandPoolTableWidget->setItem(read_commands_counter, 0, command_info[0].get());
+        ui->commandPoolTableWidget->setItem(read_commands_counter, 1, command_info[1].get());
+        ui->commandPoolTableWidget->setItem(read_commands_counter, 2, command_info[2].get());
+        ++read_commands_counter;
+    }
+}
+
 std::string CommandModeWindow::toHex(unsigned int value) {
     std::stringstream stream;
     stream << std::hex << value;
@@ -38,14 +89,16 @@ CommandModeWindow::CommandModeWindow(QWidget *parent) :
         verlist << std::to_string(i).c_str();
     }
 
-    ui->ramWidget->setVerticalHeaderLabels(verlist);
-    ui->ramWidget->setHorizontalHeaderLabels({"PROGRAM"});
-    ui->ramWidget->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->programWidget->setVerticalHeaderLabels(verlist);
+    ui->programWidget->setHorizontalHeaderLabels({"Адрес", "Команда", "Операнд 1", "Операнд 2"});
+    ui->programWidget->setSizeAdjustPolicy(QAbstractScrollArea::SizeAdjustPolicy::AdjustIgnored);
+    ui->programWidget->setSelectionMode(QAbstractItemView::SingleSelection);
 
     for (size_t i = 0; i < mk.ram.size; ++i) {
             QTableWidgetItem* item = new QTableWidgetItem();
             items.push_back(std::shared_ptr<QTableWidgetItem>(item));
-            ui->ramWidget->setItem(i, 0, item);
+            ui->programWidget->setItem(i, 0, item);
+            item->setTextAlignment(Qt::AlignCenter);
     }
     loaded = true;
     PC = mk.MEM;
@@ -62,7 +115,9 @@ CommandModeWindow::CommandModeWindow(QWidget *parent) :
     reg_labels.push_back(ui->reg7lbl);
     reg_labels.push_back(ui->reg8lbl);
     reg_labels.push_back(ui->reg9lbl);
-    prepareISAWindowText();
+    // prepareISAWindowText();
+    setupCommandPool();
+    displayCommandPool();
 }
 
 CommandModeWindow::~CommandModeWindow()
@@ -135,6 +190,7 @@ void CommandModeWindow::on_open_microcommand_mode_triggered()
 
     MainWindow* window = new MainWindow();
     window->mk = mk;
+    window->model = model;
     window->show();
     this->hide();
     window->setupItems();
@@ -283,7 +339,7 @@ WORD CommandModeWindow::parseCommand(const std::string& str) {
     return com;
 }
 
-void CommandModeWindow::on_ramWidget_cellChanged(int row, int column) {
+void CommandModeWindow::on_programWidget_cellChanged(int row, int column) {
     std::string rowContent = items[row]->text().toStdString();
     if (rowContent.empty()) { return; }
     // (mk.EA == 0b1 and mk.ED == 0b1) {
@@ -333,6 +389,11 @@ void CommandModeWindow::on_load_rom_triggered()
 
     mk = data.mk;
     PC = mk.MEM;
+
+    // add modify command pool here
+    // add modify program listing here
+    setupCommandPool();
+    displayCommandPool();
 }
 
 void CommandModeWindow::on_createISAButton_clicked()
@@ -341,30 +402,30 @@ void CommandModeWindow::on_createISAButton_clicked()
 }
 
 void CommandModeWindow::prepareISAWindowText() {
-    std::string text = "#ISA\n\n";
+    // std::string text = "#ISA\n\n";
 
-    for (const auto& [key, value] : isa_regs) {
-        text += "# " + key + " - " + value + "\n";
-    }
+    // for (const auto& [key, value] : isa_regs) {
+    //     text += "# " + key + " - " + value + "\n";
+    // }
 
-    text += "\nCOMMANDS:\n\n";
+    // text += "\nCOMMANDS:\n\n";
 
-    size_t count = 0;
-    for (const auto& [key, value] : isa_commands) {
-        text += key + " - " + toHex(value) + "\n";
-        count++;
-    }
+    // size_t count = 0;
+    // for (const auto& [key, value] : isa_commands) {
+    //     text += key + " - " + toHex(value) + "\n";
+    //     count++;
+    // }
 
-    ui->isaText->setText(text.c_str());
+    // ui->isaText->setText(text.c_str());
 
-    for (size_t i = 0; i < reg_labels.size(); ++i) {
-        std::string default_name = "REG" + std::to_string(i);
-        if (isa_regs.count(default_name)) {
-            reg_labels[i]->setText(isa_regs[default_name].c_str());
-        } else {
-            reg_labels[i]->setText(default_name.c_str());
-        }
-    }
+    // for (size_t i = 0; i < reg_labels.size(); ++i) {
+    //     std::string default_name = "REG" + std::to_string(i);
+    //     if (isa_regs.count(default_name)) {
+    //         reg_labels[i]->setText(isa_regs[default_name].c_str());
+    //     } else {
+    //         reg_labels[i]->setText(default_name.c_str());
+    //     }
+    // }
 }
 
 void CommandModeWindow::on_load_ram_triggered()
@@ -430,5 +491,25 @@ void CommandModeWindow::on_save_as_triggered()
         vec.push_back(item->text().toStdString());
     }
     fm::save_ram(current_filename, vec);
+}
+
+void CommandModeWindow::on_addFuncToPool_clicked()
+{
+    Command new_command;
+    new_command.set_name("test1");
+    new_command.set_call_address_x(0);
+    new_command.set_call_address_y(0);
+    new_command.set_code(3);
+}
+
+
+void CommandModeWindow::on_save_rom_as_triggered()
+{
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save project"),
+                                                      "~/Desktop/prog.rom",
+                                                      tr("*.rom"));
+
+    fm::save(filename.toStdString(), this->mk, model.startPoint.row, model.startPoint.col);
+    model.current_filename = filename.toStdString();
 }
 

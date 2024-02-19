@@ -45,6 +45,7 @@ void ROMWindow::setupItems() {
             } else {
                 item->setBackground(QBrush(Qt::blue));
             }
+            item->setForeground(QBrush(Qt::white));
             item->setText(command.tag.c_str());
         }
     }

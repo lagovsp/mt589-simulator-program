@@ -10,6 +10,7 @@ CONFIG += c++17
 
 ICON = MT589.icns
 SOURCES += \
+    command.cpp \
     commandmodewindow.cpp \
     cpe.cpp \
     createisa.cpp \
@@ -24,6 +25,7 @@ SOURCES += \
 
 HEADERS += \
     Model.h \
+    command.h \
     commandmodewindow.h \
     cpe.h \
     createisa.h \

@@ -1,0 +1,7 @@
+{
+    "commands": {
+        "Foo1": 10,
+        "Foo2": 16
+    },
+    "regs": null
+}

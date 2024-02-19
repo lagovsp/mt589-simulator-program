@@ -27,7 +27,10 @@ struct microcommand {
     std::string address_control = "0000000";
 
     // For naming
-    std::string tag = "";
+    std::string tag = ""; // -->v
+    // For programming mode -->^
+    bool is_command_entrypoint = false;
+    size_t command_code = 0;
 };
 
 struct ROM
@@ -37,9 +40,12 @@ struct ROM
     microcommand read(size_t row, size_t col);
     bool is_nop(size_t row, size_t col);
 
-    std::vector< std::vector<microcommand> > memory;
+    std::vector<std::vector<microcommand>> memory;
     const size_t _rows = 0x20; // 32
     const size_t _cols = 0x10; // 16
+
+    // for upgrade
+    std::vector<size_t> program_as_commands_codes_order;
 };
 
 #endif // ROM_H

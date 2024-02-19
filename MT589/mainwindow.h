@@ -64,6 +64,8 @@ public:
 
     MK589 mk;
 
+    Model model = Model();
+
 private slots:
     void on_stepButton_clicked();
 
@@ -131,7 +133,7 @@ private:
 
     // States & Data
 
-    Model model = Model();
+    // Model model = Model();
 
     QBrush commandColor = QBrush(Qt::blue);
 

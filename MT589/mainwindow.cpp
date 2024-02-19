@@ -583,7 +583,7 @@ void MainWindow::on_save_file_as_triggered()
     QString filename = QFileDialog::getSaveFileName(this, tr("Save project"),
                                "~/Desktop/prog.rom",
                                tr("*.rom"));
-   fm::save(filename.toStdString(), this->mk, model.startPoint.row, model.startPoint.col, MT::microcommand);
+   fm::save(filename.toStdString(), this->mk, model.startPoint.row, model.startPoint.col);
    model.current_filename = filename.toStdString();
 }
 
@@ -611,10 +611,10 @@ void MainWindow::on_save_file_triggered()
         QString filename = QFileDialog::getSaveFileName(this, tr("Save project"),
                                    "~/prog.rom",
                                    tr("*.rom"));
-       fm::save(filename.toStdString(), this->mk, model.startPoint.col, model.startPoint.row, MT::microcommand);
+       fm::save(filename.toStdString(), this->mk, model.startPoint.col, model.startPoint.row);
        model.current_filename = filename.toStdString();
     } else {
-        fm::save(model.current_filename, this->mk, model.startPoint.col, model.startPoint.row, MT::microcommand);
+        fm::save(model.current_filename, this->mk, model.startPoint.col, model.startPoint.row);
     }
 }
 
@@ -622,8 +622,11 @@ void MainWindow::on_open_command_mode_triggered()
 {
     CommandModeWindow* window = new CommandModeWindow();
     window->mk = mk;
+    window->model = model;
+    window->setupCommandPool();
+    window->displayCommandPool();
     window->show();
-    this->hide();
+    // this->hide();
 }
 
 void MainWindow::setupItems() {

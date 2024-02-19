@@ -6,19 +6,19 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>950</width>
+    <width>1200</width>
     <height>700</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>950</width>
+    <width>1200</width>
     <height>700</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>950</width>
+    <width>1200</width>
     <height>700</height>
    </size>
   </property>
@@ -29,8 +29,8 @@
    <widget class="QPushButton" name="endButton">
     <property name="geometry">
      <rect>
-      <x>420</x>
-      <y>590</y>
+      <x>310</x>
+      <y>620</y>
       <width>100</width>
       <height>31</height>
      </rect>
@@ -42,8 +42,8 @@
    <widget class="QFrame" name="MemFrame">
     <property name="geometry">
      <rect>
-      <x>530</x>
-      <y>380</y>
+      <x>750</x>
+      <y>330</y>
       <width>261</width>
       <height>231</height>
      </rect>
@@ -273,15 +273,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -306,6 +297,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>0</red>
+           <green>120</green>
+           <blue>212</blue>
           </color>
          </brush>
         </colorrole>
@@ -464,15 +464,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -497,6 +488,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>30</red>
+           <green>30</green>
+           <blue>30</blue>
           </color>
          </brush>
         </colorrole>
@@ -655,15 +655,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -688,6 +679,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>157</red>
+           <green>157</green>
+           <blue>157</blue>
           </color>
          </brush>
         </colorrole>
@@ -900,15 +900,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -933,6 +924,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>0</red>
+           <green>120</green>
+           <blue>212</blue>
           </color>
          </brush>
         </colorrole>
@@ -1091,15 +1091,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -1124,6 +1115,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>30</red>
+           <green>30</green>
+           <blue>30</blue>
           </color>
          </brush>
         </colorrole>
@@ -1282,15 +1282,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -1315,6 +1306,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>157</red>
+           <green>157</green>
+           <blue>157</blue>
           </color>
          </brush>
         </colorrole>
@@ -1511,15 +1511,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -1544,6 +1535,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>0</red>
+           <green>120</green>
+           <blue>212</blue>
           </color>
          </brush>
         </colorrole>
@@ -1702,15 +1702,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -1735,6 +1726,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>30</red>
+           <green>30</green>
+           <blue>30</blue>
           </color>
          </brush>
         </colorrole>
@@ -1893,15 +1893,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -1926,6 +1917,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>157</red>
+           <green>157</green>
+           <blue>157</blue>
           </color>
          </brush>
         </colorrole>
@@ -2122,15 +2122,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="SolidPattern">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="255">
@@ -2155,6 +2146,15 @@
            <red>0</red>
            <green>0</green>
            <blue>0</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>0</red>
+           <green>120</green>
+           <blue>212</blue>
           </color>
          </brush>
         </colorrole>
@@ -2313,15 +2313,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -2346,6 +2337,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>30</red>
+           <green>30</green>
+           <blue>30</blue>
           </color>
          </brush>
         </colorrole>
@@ -2504,15 +2504,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -2537,6 +2528,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>157</red>
+           <green>157</green>
+           <blue>157</blue>
           </color>
          </brush>
         </colorrole>
@@ -2733,15 +2733,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -2766,6 +2757,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>0</red>
+           <green>120</green>
+           <blue>212</blue>
           </color>
          </brush>
         </colorrole>
@@ -2924,15 +2924,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -2957,6 +2948,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>30</red>
+           <green>30</green>
+           <blue>30</blue>
           </color>
          </brush>
         </colorrole>
@@ -3115,15 +3115,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -3148,6 +3139,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>157</red>
+           <green>157</green>
+           <blue>157</blue>
           </color>
          </brush>
         </colorrole>
@@ -3344,15 +3344,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -3377,6 +3368,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>0</red>
+           <green>120</green>
+           <blue>212</blue>
           </color>
          </brush>
         </colorrole>
@@ -3535,15 +3535,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -3568,6 +3559,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>30</red>
+           <green>30</green>
+           <blue>30</blue>
           </color>
          </brush>
         </colorrole>
@@ -3726,15 +3726,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -3759,6 +3750,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>157</red>
+           <green>157</green>
+           <blue>157</blue>
           </color>
          </brush>
         </colorrole>
@@ -3955,15 +3955,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -3988,6 +3979,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>0</red>
+           <green>120</green>
+           <blue>212</blue>
           </color>
          </brush>
         </colorrole>
@@ -4146,15 +4146,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -4179,6 +4170,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>30</red>
+           <green>30</green>
+           <blue>30</blue>
           </color>
          </brush>
         </colorrole>
@@ -4337,15 +4337,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -4370,6 +4361,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>157</red>
+           <green>157</green>
+           <blue>157</blue>
           </color>
          </brush>
         </colorrole>
@@ -4614,15 +4614,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -4647,6 +4638,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>0</red>
+           <green>120</green>
+           <blue>212</blue>
           </color>
          </brush>
         </colorrole>
@@ -4805,15 +4805,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -4838,6 +4829,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>30</red>
+           <green>30</green>
+           <blue>30</blue>
           </color>
          </brush>
         </colorrole>
@@ -4996,15 +4996,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -5032,12 +5023,20 @@
           </color>
          </brush>
         </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>157</red>
+           <green>157</green>
+           <blue>157</blue>
+          </color>
+         </brush>
+        </colorrole>
        </disabled>
       </palette>
      </property>
      <property name="font">
       <font>
-       <weight>50</weight>
        <italic>false</italic>
        <bold>false</bold>
        <underline>false</underline>
@@ -5234,15 +5233,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -5267,6 +5257,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>0</red>
+           <green>120</green>
+           <blue>212</blue>
           </color>
          </brush>
         </colorrole>
@@ -5425,15 +5424,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -5458,6 +5448,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>30</red>
+           <green>30</green>
+           <blue>30</blue>
           </color>
          </brush>
         </colorrole>
@@ -5616,15 +5615,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -5649,6 +5639,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>157</red>
+           <green>157</green>
+           <blue>157</blue>
           </color>
          </brush>
         </colorrole>
@@ -5866,15 +5865,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -5899,6 +5889,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>0</red>
+           <green>120</green>
+           <blue>212</blue>
           </color>
          </brush>
         </colorrole>
@@ -6057,15 +6056,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -6090,6 +6080,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>30</red>
+           <green>30</green>
+           <blue>30</blue>
           </color>
          </brush>
         </colorrole>
@@ -6248,15 +6247,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -6281,6 +6271,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>157</red>
+           <green>157</green>
+           <blue>157</blue>
           </color>
          </brush>
         </colorrole>
@@ -6493,15 +6492,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="SolidPattern">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="255">
@@ -6526,6 +6516,15 @@
            <red>0</red>
            <green>0</green>
            <blue>0</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>0</red>
+           <green>120</green>
+           <blue>212</blue>
           </color>
          </brush>
         </colorrole>
@@ -6684,15 +6683,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -6717,6 +6707,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>30</red>
+           <green>30</green>
+           <blue>30</blue>
           </color>
          </brush>
         </colorrole>
@@ -6875,15 +6874,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -6908,6 +6898,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>157</red>
+           <green>157</green>
+           <blue>157</blue>
           </color>
          </brush>
         </colorrole>
@@ -7223,15 +7222,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -7256,6 +7246,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>0</red>
+           <green>120</green>
+           <blue>212</blue>
           </color>
          </brush>
         </colorrole>
@@ -7414,15 +7413,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -7447,6 +7437,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>30</red>
+           <green>30</green>
+           <blue>30</blue>
           </color>
          </brush>
         </colorrole>
@@ -7605,15 +7604,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -7638,6 +7628,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>157</red>
+           <green>157</green>
+           <blue>157</blue>
           </color>
          </brush>
         </colorrole>
@@ -7690,7 +7689,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>560</y>
+      <y>620</y>
       <width>100</width>
       <height>31</height>
      </rect>
@@ -7702,21 +7701,24 @@
    <widget class="QLabel" name="label_48">
     <property name="geometry">
      <rect>
-      <x>11</x>
-      <y>1</y>
-      <width>58</width>
-      <height>16</height>
+      <x>160</x>
+      <y>0</y>
+      <width>141</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
-     <string>RAM</string>
+     <string># Программа</string>
+    </property>
+    <property name="textFormat">
+     <enum>Qt::MarkdownText</enum>
     </property>
    </widget>
    <widget class="QLabel" name="label_29">
     <property name="geometry">
      <rect>
-      <x>540</x>
-      <y>360</y>
+      <x>760</x>
+      <y>310</y>
       <width>58</width>
       <height>16</height>
      </rect>
@@ -7728,8 +7730,8 @@
    <widget class="QFrame" name="OutputFrame">
     <property name="geometry">
      <rect>
-      <x>790</x>
-      <y>380</y>
+      <x>1030</x>
+      <y>330</y>
       <width>141</width>
       <height>231</height>
      </rect>
@@ -7940,15 +7942,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -7973,6 +7966,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>0</red>
+           <green>120</green>
+           <blue>212</blue>
           </color>
          </brush>
         </colorrole>
@@ -8131,15 +8133,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -8164,6 +8157,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>30</red>
+           <green>30</green>
+           <blue>30</blue>
           </color>
          </brush>
         </colorrole>
@@ -8322,15 +8324,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -8355,6 +8348,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>157</red>
+           <green>157</green>
+           <blue>157</blue>
           </color>
          </brush>
         </colorrole>
@@ -8564,15 +8566,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -8597,6 +8590,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>0</red>
+           <green>120</green>
+           <blue>212</blue>
           </color>
          </brush>
         </colorrole>
@@ -8755,15 +8757,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -8788,6 +8781,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>30</red>
+           <green>30</green>
+           <blue>30</blue>
           </color>
          </brush>
         </colorrole>
@@ -8946,15 +8948,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -8979,6 +8972,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>157</red>
+           <green>157</green>
+           <blue>157</blue>
           </color>
          </brush>
         </colorrole>
@@ -9175,15 +9177,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -9208,6 +9201,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>0</red>
+           <green>120</green>
+           <blue>212</blue>
           </color>
          </brush>
         </colorrole>
@@ -9366,15 +9368,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -9399,6 +9392,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>30</red>
+           <green>30</green>
+           <blue>30</blue>
           </color>
          </brush>
         </colorrole>
@@ -9557,15 +9559,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -9590,6 +9583,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>157</red>
+           <green>157</green>
+           <blue>157</blue>
           </color>
          </brush>
         </colorrole>
@@ -9799,15 +9801,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -9832,6 +9825,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>0</red>
+           <green>120</green>
+           <blue>212</blue>
           </color>
          </brush>
         </colorrole>
@@ -9990,15 +9992,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -10023,6 +10016,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>30</red>
+           <green>30</green>
+           <blue>30</blue>
           </color>
          </brush>
         </colorrole>
@@ -10181,15 +10183,6 @@
           </color>
          </brush>
         </colorrole>
-        <colorrole role="NoRole">
-         <brush brushstyle="NoBrush">
-          <color alpha="255">
-           <red>0</red>
-           <green>0</green>
-           <blue>0</blue>
-          </color>
-         </brush>
-        </colorrole>
         <colorrole role="ToolTipBase">
          <brush brushstyle="SolidPattern">
           <color alpha="63">
@@ -10214,6 +10207,15 @@
            <red>255</red>
            <green>255</green>
            <blue>255</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Accent">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>157</red>
+           <green>157</green>
+           <blue>157</blue>
           </color>
          </brush>
         </colorrole>
@@ -10249,8 +10251,8 @@
    <widget class="QLabel" name="label_30">
     <property name="geometry">
      <rect>
-      <x>800</x>
-      <y>360</y>
+      <x>1040</x>
+      <y>310</y>
       <width>58</width>
       <height>16</height>
      </rect>
@@ -10262,8 +10264,8 @@
    <widget class="QPushButton" name="runButton">
     <property name="geometry">
      <rect>
-      <x>420</x>
-      <y>560</y>
+      <x>210</x>
+      <y>620</y>
       <width>100</width>
       <height>31</height>
      </rect>
@@ -10278,8 +10280,8 @@
    <widget class="QPushButton" name="stepButton">
     <property name="geometry">
      <rect>
-      <x>320</x>
-      <y>560</y>
+      <x>110</x>
+      <y>620</y>
       <width>100</width>
       <height>31</height>
      </rect>
@@ -10332,13 +10334,13 @@
      </layout>
     </widget>
    </widget>
-   <widget class="QTableWidget" name="ramWidget">
+   <widget class="QTableWidget" name="programWidget">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>20</y>
-      <width>511</width>
-      <height>531</height>
+      <y>40</y>
+      <width>401</width>
+      <height>571</height>
      </rect>
     </property>
     <property name="inputMethodHints">
@@ -10354,10 +10356,13 @@
      <number>256</number>
     </property>
     <property name="columnCount">
-     <number>1</number>
+     <number>4</number>
     </property>
     <attribute name="horizontalHeaderCascadingSectionResizes">
      <bool>false</bool>
+    </attribute>
+    <attribute name="horizontalHeaderDefaultSectionSize">
+     <number>90</number>
     </attribute>
     <attribute name="horizontalHeaderStretchLastSection">
      <bool>true</bool>
@@ -10627,50 +10632,32 @@
     <row/>
     <row/>
     <row/>
-    <column/>
-    <item row="0" column="0">
+    <column>
      <property name="text">
-      <string/>
+      <string>Address</string>
      </property>
-    </item>
-   </widget>
-   <widget class="QTextBrowser" name="isaText">
-    <property name="geometry">
-     <rect>
-      <x>530</x>
-      <y>20</y>
-      <width>401</width>
-      <height>271</height>
-     </rect>
-    </property>
-    <property name="html">
-     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.AppleSystemUIFont'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;# ISA&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:18pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;# REG0 - PC, REG1 - SP&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;# WORK REG A - REG8&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;# Начальный адрес указателя стека - 200&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;# IS - инициализация SP значением 200 (с шины I)&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:18pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;COMMANDS:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:18pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;0. LCM&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;1. ADDA ARG&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;2. MOVA ARG&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;3. INCA&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;4. POP&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;5. PUSH&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;6. IS&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-    </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Command Name</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Operand 1</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Operand 2</string>
+     </property>
+    </column>
    </widget>
    <widget class="QPushButton" name="createISAButton">
     <property name="geometry">
      <rect>
-      <x>810</x>
-      <y>300</y>
+      <x>1050</x>
+      <y>580</y>
       <width>113</width>
       <height>32</height>
      </rect>
@@ -10679,14 +10666,526 @@ p, li { white-space: pre-wrap; }
      <string>Create ISA</string>
     </property>
    </widget>
+   <widget class="QLabel" name="label_49">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>0</y>
+      <width>141</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string># Пул команд</string>
+    </property>
+    <property name="textFormat">
+     <enum>Qt::MarkdownText</enum>
+    </property>
+   </widget>
+   <widget class="QTableWidget" name="commandPoolTableWidget">
+    <property name="geometry">
+     <rect>
+      <x>420</x>
+      <y>40</y>
+      <width>311</width>
+      <height>571</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="selectionMode">
+     <enum>QAbstractItemView::SingleSelection</enum>
+    </property>
+    <property name="selectionBehavior">
+     <enum>QAbstractItemView::SelectRows</enum>
+    </property>
+    <property name="showGrid">
+     <bool>true</bool>
+    </property>
+    <property name="rowCount">
+     <number>256</number>
+    </property>
+    <attribute name="horizontalHeaderVisible">
+     <bool>true</bool>
+    </attribute>
+    <attribute name="horizontalHeaderCascadingSectionResizes">
+     <bool>false</bool>
+    </attribute>
+    <attribute name="horizontalHeaderMinimumSectionSize">
+     <number>90</number>
+    </attribute>
+    <attribute name="horizontalHeaderDefaultSectionSize">
+     <number>90</number>
+    </attribute>
+    <attribute name="verticalHeaderMinimumSectionSize">
+     <number>30</number>
+    </attribute>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <column>
+     <property name="text">
+      <string>Адрес вызова</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Код команды</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Имя команды</string>
+     </property>
+    </column>
+   </widget>
+   <widget class="QPushButton" name="addFuncToPool">
+    <property name="geometry">
+     <rect>
+      <x>420</x>
+      <y>620</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PushButton</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="addFuncToPool_2">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>620</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PushButton</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_50">
+    <property name="geometry">
+     <rect>
+      <x>850</x>
+      <y>0</y>
+      <width>231</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string># Редактор команды</string>
+    </property>
+    <property name="textFormat">
+     <enum>Qt::MarkdownText</enum>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_2">
+    <property name="geometry">
+     <rect>
+      <x>860</x>
+      <y>60</y>
+      <width>71</width>
+      <height>24</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>750</x>
+      <y>50</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+      <italic>true</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Адрес вызова:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>940</x>
+      <y>50</y>
+      <width>61</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+      <italic>true</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>cтрока</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>1110</x>
+      <y>50</y>
+      <width>71</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+      <italic>true</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>столбец</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_3">
+    <property name="geometry">
+     <rect>
+      <x>1030</x>
+      <y>60</y>
+      <width>71</width>
+      <height>24</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>750</x>
+      <y>80</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+      <italic>true</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Код команды:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_4">
+    <property name="geometry">
+     <rect>
+      <x>860</x>
+      <y>90</y>
+      <width>71</width>
+      <height>24</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>940</x>
+      <y>80</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+      <italic>true</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Имя команды:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_5">
+    <property name="geometry">
+     <rect>
+      <x>1060</x>
+      <y>90</y>
+      <width>121</width>
+      <height>24</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>950</width>
-     <height>22</height>
+     <width>1200</width>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">
@@ -10697,7 +11196,9 @@ p, li { white-space: pre-wrap; }
     <addaction name="save_as"/>
     <addaction name="load_ram"/>
     <addaction name="separator"/>
+    <addaction name="save_rom_as"/>
     <addaction name="load_rom"/>
+    <addaction name="separator"/>
     <addaction name="load_isa"/>
    </widget>
    <widget class="QMenu" name="menu_2">
@@ -10759,6 +11260,11 @@ p, li { white-space: pre-wrap; }
   <action name="load_ram">
    <property name="text">
     <string>Загрузить ОЗУ</string>
+   </property>
+  </action>
+  <action name="save_rom_as">
+   <property name="text">
+    <string>Сохранить образ ПЗУ как...</string>
    </property>
   </action>
  </widget>

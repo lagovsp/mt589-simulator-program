@@ -1,0 +1,10 @@
+{
+    "commands": {
+        "INCA": 6,
+        "INVA": 3
+    },
+    "regs": {
+        "REG0": "test1",
+        "REG1": "test2"
+    }
+}

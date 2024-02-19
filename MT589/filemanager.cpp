@@ -53,18 +53,11 @@ fm::programm_data fm::get_data(const std::string& filename) {
 
     int start_row = -1;
     int start_col = -1;
-    MT::Mode mode = MT::microcommand;
     MK589 mk;
 
     start_row = data["start"]["row"].get<int>();
     start_col = data["start"]["col"].get<int>();
 
-    std::string mode_str = data["mode"].get<std::string>();
-    if (mode_str == "microcommand") {
-        mode = MT::microcommand;
-    } else {
-        mode = MT::command;
-    }
 
     for (size_t col = 0; col < 16; ++col) {
         for (size_t row = 0; row < 32; ++row) {
@@ -89,10 +82,19 @@ fm::programm_data fm::get_data(const std::string& filename) {
             command.FC = command_data["FC"].get<int>();
             command.AC = std::bitset<7>(command_data["AC"].get<std::string>());
             command.K = command_data["K"].get<int>();
+
+            // Upgrade to command mode
             command.tag = command_data["Tag"].get<std::string>();
+            command.is_command_entrypoint = command_data["is_command_entrypoint"].get<bool>();
+            command.command_code = command_data["command_code"].get<size_t>();
 
             mk.rom.write(row, col, command);
         }
+    }
+
+    if (data.contains("program")) {
+        auto program = data["program"].get<std::vector<size_t>>();
+        mk.rom.program_as_commands_codes_order = program;
     }
 
     fm::programm_data prog_data;
@@ -102,47 +104,45 @@ fm::programm_data fm::get_data(const std::string& filename) {
     return prog_data;
 }
 
-void fm::save(const std::string& filename, MK589& mk, int startCol, int startRow, MT::Mode mode) {
+void fm::save(const std::string& filename, MK589& mk, int startCol, int startRow) {
 
-    switch (mode) {
-    case MT::command: {
-        break;
-    }
-    case MT::microcommand: {
-        json data;
-        data["start"] = { { "row", startRow }, { "col", startCol }};
-        data["mode"] = "microcommand";
-        data["matrix"] =  {};
-        for (size_t col = 0; col < 16; ++col) {
-            for (size_t row = 0; row < 32; ++row) {
-                microcommand command = mk.rom.read(row, col);
-                json command_data;
+    json data;
+    data["start"] = { { "row", startRow }, { "col", startCol }};
+    data["matrix"] =  {};
 
-                command_data["empty"] = command.empty;
-                command_data["F"] = command.F.to_string();
-                command_data["I"] = command.I;
-                command_data["index_F"] = command.index_F;
-                command_data["index_FIC"] = command.index_FIC;
-                command_data["index_FOC"] = command.index_FOC;
-                command_data["index_Jump"] = command.index_Jump;
-                command_data["address_control"] = command.address_control;
-                command_data["RW"] = int(command.RW);
-                command_data["LD"] = int(command.LD);
-                command_data["CS"] = int(command.CS);
-                command_data["FC"] = int(command.FC);
-                command_data["EA"] = int(command.EA);
-                command_data["ED"] = int(command.ED);
-                command_data["AC"] = command.AC.to_string();
-                command_data["K"] = command.K;
-                command_data["Tag"] = command.tag;
+    for (size_t col = 0; col < 16; ++col) {
+        for (size_t row = 0; row < 32; ++row) {
+            microcommand command = mk.rom.read(row, col);
+            json command_data;
 
-                data["matrix"][std::to_string(row) + "-" + std::to_string(col)] = command_data;
-            }
+            command_data["empty"] = command.empty;
+            command_data["F"] = command.F.to_string();
+            command_data["I"] = command.I;
+            command_data["index_F"] = command.index_F;
+            command_data["index_FIC"] = command.index_FIC;
+            command_data["index_FOC"] = command.index_FOC;
+            command_data["index_Jump"] = command.index_Jump;
+            command_data["address_control"] = command.address_control;
+            command_data["RW"] = int(command.RW);
+            command_data["LD"] = int(command.LD);
+            command_data["CS"] = int(command.CS);
+            command_data["FC"] = int(command.FC);
+            command_data["EA"] = int(command.EA);
+            command_data["ED"] = int(command.ED);
+            command_data["AC"] = command.AC.to_string();
+            command_data["K"] = command.K;
+
+            // for command name
+            command_data["Tag"] = command.tag;
+            command_data["is_command_entrypoint"] = command.is_command_entrypoint;
+            command_data["command_code"] = command.command_code;
+
+            data["matrix"][std::to_string(row) + "-" + std::to_string(col)] = command_data;
         }
-        fm::write_to_file(filename, data);
-        break;
     }
-    }
+
+    data["program"] = mk.rom.program_as_commands_codes_order;
+    fm::write_to_file(filename, data);
 }
 
 void fm::write_to_file(const std::string& filename, const json& data) {

@@ -9,6 +9,7 @@
 #include <sstream>
 #include <mainwindow.h>
 #include <createisa.h>
+#include <command.h>
 
 namespace Ui {
 class CommandModeWindow;
@@ -24,9 +25,15 @@ public:
 
     MK589 mk;
 
+    Model model;
+
     std::shared_ptr<MainWindow> mainWindow = nullptr;
 
     void prepareISAWindowText();
+
+    void setupCommandPool();
+
+    void displayCommandPool();
 
 private slots:
     void on_open_rom_triggered();
@@ -47,7 +54,7 @@ private slots:
 
     void on_endButton_clicked();
 
-    void on_ramWidget_cellChanged(int row, int column);
+    void on_programWidget_cellChanged(int row, int column);
 
     void update_on_cpu_data();
 
@@ -62,6 +69,10 @@ private slots:
     void on_createISAButton_clicked();
 
     void on_load_ram_triggered();
+
+    void on_addFuncToPool_clicked();
+
+    void on_save_rom_as_triggered();
 
 private:
     Ui::CommandModeWindow *ui;
@@ -108,6 +119,14 @@ private:
     std::vector<QLabel*> reg_labels;
 
     std::string current_filename = "";
+
+//public:
+    //
+    std::unordered_map<size_t, std::pair<size_t,size_t>> command_code_to_cell_address = {};
+    std::list<Command> commands_list = {};
+
+    std::vector<std::vector<std::shared_ptr<QTableWidgetItem>>> command_pool = {};
+    std::vector<std::vector<std::shared_ptr<QTableWidgetItem>>> program = {};
 };
 
 #endif // COMMANDMODEWINDOW_H

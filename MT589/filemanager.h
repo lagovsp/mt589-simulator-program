@@ -37,7 +37,7 @@ namespace fm {
 
     programm_data get_data(const std::string& filename);
 
-    void save(const std::string& filename, MK589& mk, int startCol, int startRow, MT::Mode mode);
+    void save(const std::string& filename, MK589& mk, int startCol, int startRow);
 
     // JSON Save & Read
 
