@@ -24,6 +24,7 @@ MK589& MK589::operator=(const MK589 &mk) {
         cpe_arr[i].reset();
     }
     rom.memory = mk.rom.memory;
+    rom.program_as_commands_codes_and_args_order = mk.rom.program_as_commands_codes_and_args_order;
     return *this;
 }
 
@@ -43,6 +44,7 @@ MK589::MK589(const MK589& mk) {
         cpe_arr[i].reset();
     }
     rom.memory = mk.rom.memory;
+    rom.program_as_commands_codes_and_args_order = mk.rom.program_as_commands_codes_and_args_order;
 }
 
 void MK589::reset() {

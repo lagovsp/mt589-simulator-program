@@ -1,4 +1,5 @@
 #include "rom.h"
+#include <iostream>
 
 ROM::ROM() {
    memory.resize(_rows);
@@ -27,6 +28,7 @@ bool ROM::is_nop(size_t row, size_t col) {
 
 void ROM::write(size_t row, size_t col, microcommand cmd) {
     memory[row][col] = cmd;
+    std::cerr<<"memory["<<row<<"]["<<col<<"]=iscmdentr"<<cmd.is_command_entrypoint<<std::endl;
 }
 
 microcommand ROM::read(size_t row, size_t col) {

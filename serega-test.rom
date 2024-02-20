@@ -10753,20 +10753,20 @@
             "is_command_entrypoint": false
         }
     },
-    "start": {
-        "col": 0,
-        "row": 2
-    },
     "program": [
         {
-            "command_code": 1,
             "arg1": 54,
-            "arg2": 71
+            "arg2": 71,
+            "command_code": 1
         },
         {
-            "command_code": 2,
             "arg1": 4,
-            "arg2": 0
+            "arg2": 0,
+            "command_code": 2
         }
-    ]
+    ],
+    "start": {
+        "col": -1,
+        "row": -1
+    }
 }

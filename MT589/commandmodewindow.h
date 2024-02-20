@@ -35,6 +35,10 @@ public:
 
     void displayCommandPool();
 
+    void scanProgram();
+
+    void displayProgram();
+
 private slots:
     void on_open_rom_triggered();
 
@@ -64,7 +68,7 @@ private slots:
 
     void on_load_isa_triggered();
 
-    void on_load_rom_triggered();
+    // void on_load_rom_triggered();
 
     void on_createISAButton_clicked();
 
@@ -73,6 +77,10 @@ private slots:
     void on_addFuncToPool_clicked();
 
     void on_save_rom_as_triggered();
+
+    void on_programWidget_itemClicked(QTableWidgetItem *item);
+
+    void on_programWidget_cellClicked(int row, int column);
 
 private:
     Ui::CommandModeWindow *ui;
@@ -122,8 +130,11 @@ private:
 
 //public:
     //
-    std::unordered_map<size_t, std::pair<size_t,size_t>> command_code_to_cell_address = {};
-    std::list<Command> commands_list = {};
+    using Code = size_t;
+    using Name = std::string;
+    using Address = std::pair<size_t, size_t>;
+    std::map<Code, std::pair<Name, Address>> command_code_to_name_and_cell_address = {};
+    std::list<Code> commands_codes_list = {};
 
     std::vector<std::vector<std::shared_ptr<QTableWidgetItem>>> command_pool = {};
     std::vector<std::vector<std::shared_ptr<QTableWidgetItem>>> program = {};

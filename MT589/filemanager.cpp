@@ -1,4 +1,5 @@
 #include <filemanager.h>
+#include <iostream>
 
 std::vector<std::string> fm::get_ram(const std::string& filename) {
     json data = json::parse(read_from_file(filename));
@@ -49,6 +50,7 @@ fm::isa_data fm::get_isa_data(const std::string& filename) {
 }
 
 fm::programm_data fm::get_data(const std::string& filename) {
+    std::cerr<<"entering get_data"<<std::endl;
     json data = json::parse(read_from_file(filename));
 
     int start_row = -1;
@@ -86,6 +88,7 @@ fm::programm_data fm::get_data(const std::string& filename) {
             // Upgrade to command mode
             command.tag = command_data["Tag"].get<std::string>();
             command.is_command_entrypoint = command_data["is_command_entrypoint"].get<bool>();
+            std::cerr<<"READ TAG"<<command.tag<<" ";
             command.command_code = command_data["command_code"].get<size_t>();
 
             mk.rom.write(row, col, command);
@@ -93,19 +96,29 @@ fm::programm_data fm::get_data(const std::string& filename) {
     }
 
     if (data.contains("program")) {
-        auto program = data["program"].get<std::vector<size_t>>();
-        mk.rom.program_as_commands_codes_order = program;
+        json commands_infos = data["program"];
+
+        for (auto it = commands_infos.cbegin(); it != commands_infos.cend(); ++it) {
+            auto command_code = (*it)["command_code"].get<size_t>();
+            auto arg1 = (*it)["arg1"].get<uint16_t>();
+            auto arg2 = (*it)["arg2"].get<uint16_t>();
+            std::cerr<<"gonna add command "<<command_code<<" "<<arg1<<" "<<arg2<<";;;;";
+            mk.rom.program_as_commands_codes_and_args_order.push_back({command_code, {arg1, arg2}});
+            auto it1 = mk.rom.program_as_commands_codes_and_args_order.back();
+            std::cerr<<"added ccode "<<it1.first<<" arg1 "<<it1.second.first<<" arg2 "<<it1.second.second<<std::endl;
+        }
     }
 
     fm::programm_data prog_data;
     prog_data.start_row = start_row;
     prog_data.start_col = start_col;
     prog_data.mk = mk;
+
+    std::cerr<<"exiting get_data"<<std::endl;
     return prog_data;
 }
 
 void fm::save(const std::string& filename, MK589& mk, int startCol, int startRow) {
-
     json data;
     data["start"] = { { "row", startRow }, { "col", startCol }};
     data["matrix"] =  {};
@@ -141,7 +154,15 @@ void fm::save(const std::string& filename, MK589& mk, int startCol, int startRow
         }
     }
 
-    data["program"] = mk.rom.program_as_commands_codes_order;
+    json commands_array = {};
+    for (auto it = mk.rom.program_as_commands_codes_and_args_order.cbegin(); it != mk.rom.program_as_commands_codes_and_args_order.cend(); ++it) {
+        json command;
+        command["command_code"] = (*it).first;
+        command["arg1"] = (*it).second.first;
+        command["arg2"] = (*it).second.second;
+        commands_array.push_back(command);
+    }
+    data["program"] = commands_array;
     fm::write_to_file(filename, data);
 }
 

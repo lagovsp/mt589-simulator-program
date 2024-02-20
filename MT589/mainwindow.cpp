@@ -512,6 +512,7 @@ void MainWindow::setItemColor(Point point) {
         }
     }
     item->setText(command.tag.c_str());
+    item->setForeground(QBrush(Qt::white));
 }
 
 void MainWindow::configUIMode() {
@@ -603,6 +604,15 @@ void MainWindow::on_open_file_triggered()
     setupItems();
     fillInputs();
     model.current_filename = filename;
+
+    fm::programm_data data1 = fm::get_data(filename);
+
+    model.startPoint = Point(data1.start_row, data1.start_col);
+    setItemColor(model.startPoint);
+    mk = data1.mk;
+    setupItems();
+    fillInputs();
+    model.current_filename = filename;
 }
 
 void MainWindow::on_save_file_triggered()
@@ -625,8 +635,10 @@ void MainWindow::on_open_command_mode_triggered()
     window->model = model;
     window->setupCommandPool();
     window->displayCommandPool();
+    window->scanProgram();
+    window->displayProgram();
     window->show();
-    // this->hide();
+    this->hide();
 }
 
 void MainWindow::setupItems() {
@@ -644,7 +656,9 @@ void MainWindow::on_tableWidget_cellChanged(int row, int column)
     }
     std::string content = matrixItems[row][column]->text().toStdString();
     microcommand command = mk.rom.read(row, column);
+    if (content == "") {
+        command.is_command_entrypoint = false;
+    }
     command.tag = content;
     mk.rom.write(row, column, command);
 }
-

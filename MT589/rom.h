@@ -45,7 +45,9 @@ struct ROM
     const size_t _cols = 0x10; // 16
 
     // for upgrade
-    std::vector<size_t> program_as_commands_codes_order;
+    using Args = std::pair<uint16_t, uint16_t>;
+    using Code = size_t;
+    std::vector<std::pair<Code, Args>> program_as_commands_codes_and_args_order;
 };
 
 #endif // ROM_H
