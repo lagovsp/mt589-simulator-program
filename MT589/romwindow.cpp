@@ -20,11 +20,11 @@ ROMWindow::ROMWindow(QWidget *parent) :
     ui->tableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
 
     for (size_t i = 0; i < 32; ++i) {
-        std::vector<QTableWidgetItem*> row;
+        std::vector<std::shared_ptr<QTableWidgetItem>> row;
         for (size_t j = 0; j < 16; ++j) {
-            QTableWidgetItem* item = new QTableWidgetItem();
-            row.push_back(item);
-            ui->tableWidget->setItem(i, j, item);
+            QTableWidgetItem item;
+            row.push_back(std::make_shared<QTableWidgetItem>(item));
+            ui->tableWidget->setItem(i, j, row.back().get());
         }
         items.push_back(row);
     }
@@ -39,14 +39,14 @@ void ROMWindow::setupItems() {
     for (size_t row = 0; row < 32; ++row) {
         for (size_t col = 0; col < 16; ++col) {
             microcommand command = mk.rom.getMicrocommand(row, col);
-            QTableWidgetItem* item = items[row][col];
-            if (command.is_empty()) {
-                item->setBackground(transparentColor);
-            } else {
-                item->setBackground(QBrush(Qt::blue));
-            }
-            item->setForeground(QBrush(Qt::white));
-            item->setText(command.tag.c_str());
+            // auto item = items[row][col].get();
+            // if (command.is_empty()) {
+                // item->setBackground(transparentColor);
+            // } else {
+                // item->setBackground(QBrush(Qt::blue));
+            // }
+            // item->setForeground(QBrush(Qt::white));
+            // item->setText(command.tag.c_str());
         }
     }
 }

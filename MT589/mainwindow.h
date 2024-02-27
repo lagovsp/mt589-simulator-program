@@ -136,12 +136,11 @@ private:
     // Model model = Model();
 
     QBrush commandColor = QBrush(Qt::blue);
-
     QBrush startColor = QBrush(Qt::green);
-
-    QBrush currentRunningColor = QBrush(Qt::red);
-
+    QBrush traceColor = QBrush(Qt::cyan);
     QBrush transparentColor = QBrush(Qt::transparent);
+
+    QBrush currentRunningColor = QBrush(Qt::red); // run mode
 
     bool loaded = false;
 };

@@ -228,9 +228,9 @@ CommandModeWindow::~CommandModeWindow()
 void CommandModeWindow::on_open_rom_triggered()
 {
     if (!loaded) { return; }
-    romWindow.show();
     romWindow.mk = mk;
     romWindow.setupItems();
+    romWindow.show();
 }
 
 void CommandModeWindow::on_open_triggered()
@@ -488,18 +488,20 @@ void CommandModeWindow::on_load_isa_triggered()
 
 // void CommandModeWindow::on_load_rom_triggered()
 // {
+//     if (!loaded) { return; }
 //     std::string filename = QFileDialog::getOpenFileName(this, tr("Open project"),
 //                                                     "~/Desktop/prog.rom",
 //                                                     tr("*.rom")).toStdString();
 
-//     if (filename.empty()) { return; }
 //     fm::programm_data data = fm::get_data(filename);
 
+//     model.startPoint = Point(data.start_row, data.start_col);
+//     setItemColor(model.startPoint);
 //     mk = data.mk;
-//     PC = mk.MEM;
+//     setupItems();
+//     fillInputs();
+//     model.current_filename = filename;
 
-//     // add modify command pool here
-//     // add modify program listing here
 //     setupCommandPool();
 //     displayCommandPool();
 //     scanProgram();

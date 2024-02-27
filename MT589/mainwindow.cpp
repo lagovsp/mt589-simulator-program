@@ -344,6 +344,50 @@ void MainWindow::on_tableWidget_cellClicked(int row, int column)
 {
     auto previousPoint = model.currentPoint;
     if (model.getMode() == editing) {
+
+        for (size_t row = 0; row < 32; ++row) {
+            for (size_t col = 0; col < 16; ++col) {
+                if (matrixItems[row][col]->background() != traceColor) {
+                    continue;
+                }
+                if (model.startPoint.row == row && model.startPoint.col == col) {
+                    matrixItems[row][col]->setBackground(startColor);
+                    continue;
+                }
+                matrixItems[row][col]->setBackground(commandColor);
+            }
+        }
+
+
+        Point cur_point(row, column);
+        std::list<microcommand> microcommands_in_command = {};
+        size_t jumps = 0;
+        while (jumps < 64 && !mk.getRom().getMicrocommand(cur_point.row,cur_point.col).is_empty()) {
+            ++jumps;
+            matrixItems[cur_point.row][cur_point.col]->setBackground(traceColor);
+            auto cm = mk.getRom().getMicrocommand(cur_point.row, cur_point.col);
+            if (cm.LD) {
+                break;
+            }
+            if (cm.AC.to_string().starts_with("00")){
+                cur_point.row = (size_t)(cm.AC.to_ulong());
+                continue;
+            }
+            if (cm.AC.to_string().starts_with("010")){
+                cur_point.row = 0;
+                cur_point.col = (size_t)(cm.AC.to_ulong()) - 32;
+                continue;
+            }
+            if (cm.AC.to_string().starts_with("011")){
+                cur_point.col = (size_t)(cm.AC.to_ulong()) - 48;
+                continue;
+            }
+            if (cm.AC.to_string().starts_with("1110")){
+                cur_point.row = (size_t)(cm.AC.to_ulong()) - 112;
+                continue;
+            }
+        }
+
         model.currentPoint = Point(row, column);
         changeCurrentPoint(previousPoint, model.currentPoint);
         if (previousPoint.isNull()) {
@@ -639,56 +683,13 @@ void MainWindow::on_open_command_mode_triggered()
     command_window->scanProgram();
     command_window->displayProgram();
     command_window->show();
-    command_window->loaded=false;
+    command_window->loaded=true;
     this->hide();
 }
 
 void MainWindow::setupItems() {
-    // std::cerr<<"setupItems:"<<std::endl;
-
-    // size_t c = 0;
-    // std::unordered_set<size_t> codes_set;
-    // for (size_t col = 0; col < 16; ++col) {
-    //     for (size_t row = 0; row < 32; ++row) {
-    //         if (mk.rom.getMicrocommand(row, col).is_command_entrypoint == true) {
-    //             ++c;
-    //             codes_set.insert(mk.rom.getMicrocommand(row, col).command_code);
-    //         }
-    //     }
-    // }
-    // std::cerr <<"now ; c = "<<c<<"; set size = "<<codes_set.size()<< std::endl;
-
-
     for (size_t row = 0; row < 32; ++row) {
-        // std::cerr<<"row = "<<row<<std::endl;
-
-        // size_t c = 0;
-        // std::unordered_set<size_t> codes_set;
-        // for (size_t col = 0; col < 16; ++col) {
-        //     for (size_t row = 0; row < 32; ++row) {
-        //         if (mk.rom.getMicrocommand(row, col).is_command_entrypoint == true) {
-        //             ++c;
-        //             codes_set.insert(mk.rom.getMicrocommand(row, col).command_code);
-        //         }
-        //     }
-        // }
-        // std::cerr <<"now ; c = "<<c<<"; set size = "<<codes_set.size()<< std::endl;
-
         for (size_t col = 0; col < 16; ++col) {
-            // std::cerr<<"col = "<<col<<std::endl;
-
-            // size_t c = 0;
-            // std::unordered_set<size_t> codes_set;
-            // for (size_t col = 0; col < 16; ++col) {
-            //     for (size_t row = 0; row < 32; ++row) {
-            //         if (mk.rom.getMicrocommand(row, col).is_command_entrypoint == true) {
-            //             ++c;
-            //             codes_set.insert(mk.rom.getMicrocommand(row, col).command_code);
-            //         }
-            //     }
-            // }
-            // std::cerr <<"now ; c = "<<c<<"; set size = "<<codes_set.size()<< std::endl;
-
             setItemColor(Point(row, col));
         }
     }
