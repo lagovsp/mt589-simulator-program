@@ -7,6 +7,7 @@
 #include <QString>
 #include <createisa.h>
 #include <iostream>
+#include <unordered_set>
 
 
 void CommandModeWindow::scanProgram() {
@@ -14,39 +15,37 @@ void CommandModeWindow::scanProgram() {
 
     std::cerr << "SCANPR"<<mk.rom.program_as_commands_codes_and_args_order.size()<< std::endl;
 
-    size_t program_command_address = 0;
     for(const auto& entry: mk.rom.program_as_commands_codes_and_args_order) {
         size_t code = entry.first;
         uint16_t arg1 = entry.second.first;
         uint16_t arg2 = entry.second.second;
 
-        std::vector<std::shared_ptr<QTableWidgetItem>> program_command;
+        // std::vector<std::shared_ptr<QTableWidgetItem>> program_command;
 
-        QTableWidgetItem* item1 = new QTableWidgetItem();
-        program_command.push_back(std::shared_ptr<QTableWidgetItem>(item1));
-        std::stringstream ss1;
-        ss1 << code;
-        item1->setText(QString(ss1.str().c_str()));
+        // QTableWidgetItem* item1 = new QTableWidgetItem();
+        // program_command.push_back(std::shared_ptr<QTableWidgetItem>(item1));
+        // std::stringstream ss1;
+        // ss1 << code;
+        // item1->setText(QString(ss1.str().c_str()));
 
-        QTableWidgetItem* item2 = new QTableWidgetItem();
-        program_command.push_back(std::shared_ptr<QTableWidgetItem>(item2));
-        std::string name = command_code_to_name_and_cell_address.at(code).first;
-        item2->setText(QString(name.c_str()));
+        // QTableWidgetItem* item2 = new QTableWidgetItem();
+        // program_command.push_back(std::shared_ptr<QTableWidgetItem>(item2));
+        // std::string name = code_to_name_and_address.at(code).first;
+        // item2->setText(QString(name.c_str()));
 
-        QTableWidgetItem* item3 = new QTableWidgetItem();
-        program_command.push_back(std::shared_ptr<QTableWidgetItem>(item3));
-        std::stringstream ss2;
-        ss2 << arg1;
-        item3->setText(QString(ss2.str().c_str()));
+        // QTableWidgetItem* item3 = new QTableWidgetItem();
+        // program_command.push_back(std::shared_ptr<QTableWidgetItem>(item3));
+        // std::stringstream ss2;
+        // ss2 << arg1;
+        // item3->setText(QString(ss2.str().c_str()));
 
-        QTableWidgetItem* item4 = new QTableWidgetItem();
-        program_command.push_back(std::shared_ptr<QTableWidgetItem>(item4));
-        std::stringstream ss3;
-        ss3 << arg2;
-        item4->setText(QString(ss3.str().c_str()));
+        // QTableWidgetItem* item4 = new QTableWidgetItem();
+        // program_command.push_back(std::shared_ptr<QTableWidgetItem>(item4));
+        // std::stringstream ss3;
+        // ss3 << arg2;
+        // item4->setText(QString(ss3.str().c_str()));
 
-        program.push_back(program_command);
-        ++program_command_address;
+        program.push_back({code, {arg1, arg2}});
     }
 }
 
@@ -55,48 +54,77 @@ void CommandModeWindow::displayProgram() {
 
     size_t read_commands_counter = 0;
     for (const auto& command_info: program) {
-        ui->programWidget->setItem(read_commands_counter, 0, command_info[0].get());
-        ui->programWidget->setItem(read_commands_counter, 1, command_info[1].get());
-        ui->programWidget->setItem(read_commands_counter, 2, command_info[2].get());
-        ui->programWidget->setItem(read_commands_counter, 3, command_info[3].get());
+        auto code = command_info.first;
+        auto arg1 = command_info.second.first;
+        auto arg2 = command_info.second.second;
+
+        std::vector<std::shared_ptr<QTableWidgetItem>> called_command;
+        QTableWidgetItem item = QTableWidgetItem();
+
+        std::stringstream ss1;
+        ss1 << code;
+        item.setText(QString(ss1.str().c_str()));
+        called_command.push_back(std::make_shared<QTableWidgetItem>(item));
+
+        std::string name = code_to_name_and_address.at(code).first; // at to code that disappears from the map ? why????
+        item.setText(QString(name.c_str()));
+        called_command.push_back(std::make_shared<QTableWidgetItem>(item));
+
+        std::stringstream ss2;
+        ss2 << arg1;
+        item.setText(QString(ss2.str().c_str()));
+        called_command.push_back(std::make_shared<QTableWidgetItem>(item));
+
+        std::stringstream ss3;
+        ss3 << arg2;
+        item.setText(QString(ss3.str().c_str()));
+        called_command.push_back(std::make_shared<QTableWidgetItem>(item));
+
+        command_list_widget_matrix.push_back(called_command);
+        ui->programWidget->setItem(read_commands_counter, 0, command_list_widget_matrix.back()[0].get());
+        ui->programWidget->setItem(read_commands_counter, 1, command_list_widget_matrix.back()[1].get());
+        ui->programWidget->setItem(read_commands_counter, 2, command_list_widget_matrix.back()[2].get());
+        ui->programWidget->setItem(read_commands_counter, 3, command_list_widget_matrix.back()[3].get());
         ++read_commands_counter;
     }
 }
 
 void CommandModeWindow::setupCommandPool() {
-    command_pool.clear();
-
+    code_to_name_and_address.clear();
+    program.clear();
+    // std::vector<std::pair<Code, Args>> program_as_commands_codes_and_args_order;
+    size_t c= 0;
+    std::unordered_set<size_t> codes_set;
     for (size_t col = 0; col < 16; ++col) {
         for (size_t row = 0; row < 32; ++row) {
             auto mc = mk.rom.memory[row][col];
             if (mc.is_command_entrypoint == false) {
                 continue;
             }
+            std::cerr<<"ccode: "<<mc.command_code<<std::endl;
+            ++c;
+            codes_set.insert(mc.command_code);
+            code_to_name_and_address.insert({mc.command_code, {mc.tag, {row, col}}});
+            // std::vector<std::shared_ptr<QTableWidgetItem>> command_description;
+            // QTableWidgetItem item = QTableWidgetItem();
 
-            std::vector<std::shared_ptr<QTableWidgetItem>> command_description;
+            // item.setText(("r" + std::to_string(row) + "-c" + std::to_string(col)).c_str());
+            // command_description.push_back(std::make_shared<QTableWidgetItem>(item));
 
-            QTableWidgetItem* item1 = new QTableWidgetItem();
-            command_description.push_back(std::shared_ptr<QTableWidgetItem>(item1));
-            item1->setText(("r" + std::to_string(row) + "-c" + std::to_string(col)).c_str());
+            // std::stringstream ss;
+            // ss << std::bitset<8>(mc.command_code);
+            // item.setText(ss.str().c_str());
+            // command_description.push_back(std::make_shared<QTableWidgetItem>(item));
 
-            QTableWidgetItem* item2 = new QTableWidgetItem();
-            command_description.push_back(std::shared_ptr<QTableWidgetItem>(item2));
+            // item.setText(mc.tag.c_str());
+            // command_description.push_back(std::make_shared<QTableWidgetItem>(item));
 
-            std::stringstream ss;
-            ss << std::bitset<8>(mc.command_code);
-            item2->setText(ss.str().c_str());
-
-            QTableWidgetItem* item3 = new QTableWidgetItem();
-            command_description.push_back(std::shared_ptr<QTableWidgetItem>(item3));
-            auto tag = mc.tag;
-            item3->setText(tag.c_str());
-
-            command_pool.push_back(command_description);
-            std::cerr<<std::to_string(mc.command_code)<<std::endl;
-            command_code_to_name_and_cell_address.insert({mc.command_code, {mc.tag, {row, col}}});
+            // command_pool.push_back(command_description);
+            // std::cerr<<std::to_string(mc.command_code)<<std::endl;
+            // code_to_name_and_address.insert({mc.command_code, {mc.tag, {row, col}}});
         }
     }
-    std::cerr <<"SETUPCOMPOOL"<< command_code_to_name_and_cell_address.size()<< std::endl;
+    std::cerr <<"SETUPCOMPOOL"<< code_to_name_and_address.size()<<" ; c = "<<c<<"; set size = "<<codes_set.size()<< std::endl;
 }
 
 void CommandModeWindow::displayCommandPool() {
@@ -104,10 +132,30 @@ void CommandModeWindow::displayCommandPool() {
     ui->commandPoolTableWidget->horizontalHeader()->sectionResizeMode(QHeaderView::Fixed);
     size_t read_commands_counter = 0;
 
-    for (const auto& command_info: command_pool) {
-        ui->commandPoolTableWidget->setItem(read_commands_counter, 0, command_info[0].get());
-        ui->commandPoolTableWidget->setItem(read_commands_counter, 1, command_info[1].get());
-        ui->commandPoolTableWidget->setItem(read_commands_counter, 2, command_info[2].get());
+    for (const auto& [code, value] : code_to_name_and_address) {
+        auto name = value.first;
+        auto row = value.second.first;
+        auto col = value.second.second;
+
+        std::vector<std::shared_ptr<QTableWidgetItem>> command_description;
+        QTableWidgetItem item = QTableWidgetItem();
+
+        item.setText(("r" + std::to_string(row) + "-c" + std::to_string(col)).c_str());
+        command_description.push_back(std::make_shared<QTableWidgetItem>(item));
+
+        std::stringstream ss;
+        ss << std::bitset<8>(code);
+        item.setText(ss.str().c_str());
+        command_description.push_back(std::make_shared<QTableWidgetItem>(item));
+
+        item.setText(name.c_str());
+        command_description.push_back(std::make_shared<QTableWidgetItem>(item));
+
+        command_pool_widget_matrix.push_back(command_description);
+
+        ui->commandPoolTableWidget->setItem(read_commands_counter, 0, command_pool_widget_matrix.back()[0].get());
+        ui->commandPoolTableWidget->setItem(read_commands_counter, 1, command_pool_widget_matrix.back()[1].get());
+        ui->commandPoolTableWidget->setItem(read_commands_counter, 2, command_pool_widget_matrix.back()[2].get());
         ++read_commands_counter;
     }
 }
@@ -179,6 +227,7 @@ CommandModeWindow::~CommandModeWindow()
 
 void CommandModeWindow::on_open_rom_triggered()
 {
+    if (!loaded) { return; }
     romWindow.show();
     romWindow.mk = mk;
     romWindow.setupItems();
@@ -186,6 +235,7 @@ void CommandModeWindow::on_open_rom_triggered()
 
 void CommandModeWindow::on_open_triggered()
 {
+    if (!loaded) { return; }
     std::string filename = QFileDialog::getOpenFileName(this, tr("Open ROM"),
                                                     "~/Desktop/prog.rom",
                                                     tr("*.rom")).toStdString();
@@ -239,7 +289,7 @@ void CommandModeWindow::update_on_cpu_data() {
 
 void CommandModeWindow::on_open_microcommand_mode_triggered()
 {
-
+    if (!loaded) { return; }
     MainWindow* window = new MainWindow();
     window->mk = mk;
     window->model = model;
@@ -251,6 +301,7 @@ void CommandModeWindow::on_open_microcommand_mode_triggered()
 
 void CommandModeWindow::on_resetButton_clicked()
 {
+    if (!loaded) { return; }
     WORD oldRow = *PC;
     mk.reset();
     mk.load(0b10100000);
@@ -261,13 +312,14 @@ void CommandModeWindow::on_resetButton_clicked()
 
 void CommandModeWindow::on_stepButton_clicked()
 {
+    if (!loaded) { return; }
     bool is_loadmem_prog_running = true;
     WORD oldRow = *PC;
     while (is_loadmem_prog_running) {
         size_t r = mk.get_row_adr();
         size_t c = mk.get_col_adr();
-        auto command = mk.rom.read(r, c);
-        if (command.empty) { return; }
+        auto command = mk.rom.getMicrocommand(r, c);
+        if (command.is_empty()) { return; }
         if (command.CS == 0b1 and command.RW == 0b0 and command.EA == 0b1) {
             // read
             command.M = mk.ram.read(mk.MAR);
@@ -288,8 +340,8 @@ void CommandModeWindow::on_stepButton_clicked()
     size_t current_col = mk.get_col_adr();
 
     while (current_row != 0 && current_col != 10) {
-        auto command = mk.rom.read(current_row, current_col);
-        if (command.empty) { break; }
+        auto command = mk.rom.getMicrocommand(current_row, current_col);
+        if (command.is_empty()) { break; }
         if (command.CS == 0b1 and command.RW == 0b0 and command.EA == 0b1) {
             // read
             command.M = mk.ram.read(mk.MAR);
@@ -313,14 +365,15 @@ void CommandModeWindow::on_stepButton_clicked()
 
 void CommandModeWindow::on_runButton_clicked()
 {
+    if (!loaded) { return; }
     while (true) {
         bool is_loadmem_prog_running = true;
         WORD oldRow = *PC;
         while (is_loadmem_prog_running) {
             size_t r = mk.get_row_adr();
             size_t c = mk.get_col_adr();
-            auto command = mk.rom.read(r, c);
-            if (command.empty) { return; }
+            auto command = mk.rom.getMicrocommand(r, c);
+            if (command.is_empty()) { return; }
             if (command.CS == 0b1 and command.RW == 0b0 and command.EA == 0b1) {
                 // read
                 command.M = mk.ram.read(mk.MAR);
@@ -341,8 +394,8 @@ void CommandModeWindow::on_runButton_clicked()
         size_t current_col = mk.get_col_adr();
 
         while (current_row != 0 && current_col != 10) {
-            auto command = mk.rom.read(current_row, current_col);
-            if (command.empty) { break; }
+            auto command = mk.rom.getMicrocommand(current_row, current_col);
+            if (command.is_empty()) { break; }
             if (command.CS == 0b1 and command.RW == 0b0 and command.EA == 0b1) {
                 // read
                 command.M = mk.ram.read(mk.MAR);
@@ -367,7 +420,7 @@ void CommandModeWindow::on_runButton_clicked()
 
 void CommandModeWindow::on_endButton_clicked()
 {
-
+    if (!loaded) { return; }
 }
 
 WORD CommandModeWindow::parseCommand(const std::string& str) {
@@ -392,6 +445,8 @@ WORD CommandModeWindow::parseCommand(const std::string& str) {
 }
 
 void CommandModeWindow::on_programWidget_cellChanged(int row, int column) {
+    if (!loaded) { return; }
+
     std::string rowContent = items[row]->text().toStdString();
     if (rowContent.empty()) { return; }
     // (mk.EA == 0b1 and mk.ED == 0b1) {
@@ -419,6 +474,7 @@ void CommandModeWindow::changeCurrentRow(WORD oldRow, WORD newRow) {
 
 void CommandModeWindow::on_load_isa_triggered()
 {
+    if (!loaded) { return; }
     // std::string filename = QFileDialog::getOpenFileName(this, tr("Open ISA file"),
     //                                                 "~/Desktop/prog.isad",
     //                                                 tr("*.isad")).toStdString();
@@ -484,6 +540,7 @@ void CommandModeWindow::prepareISAWindowText() {
 
 void CommandModeWindow::on_load_ram_triggered()
 {
+    if (!loaded) { return; }
     std::string filename = QFileDialog::getOpenFileName(this, tr("Load RAM"),
                                                     "~/Desktop/ram.ramdata",
                                                     tr("*.ramdata")).toStdString();
@@ -519,6 +576,7 @@ void CommandModeWindow::on_load_ram_triggered()
 
 void CommandModeWindow::on_save_triggered()
 {
+    if (!loaded) { return; }
     if (current_filename.empty()) {
         QString filename = QFileDialog::getSaveFileName(this, tr("Save RAM"),
                                    "~/prog.ramdata",
@@ -535,6 +593,7 @@ void CommandModeWindow::on_save_triggered()
 
 void CommandModeWindow::on_save_as_triggered()
 {
+    if (!loaded) { return; }
     QString filename = QFileDialog::getSaveFileName(this, tr("Save RAM"),
                                                    "~/prog.ramdata",
                                                    tr("*.ramdata"));
@@ -549,6 +608,7 @@ void CommandModeWindow::on_save_as_triggered()
 
 void CommandModeWindow::on_addFuncToPool_clicked()
 {
+    if (!loaded) { return; }
 //     Command new_command;
 //     new_command.set_name("test1");
 //     new_command.set_call_address_x(0);
@@ -559,6 +619,7 @@ void CommandModeWindow::on_addFuncToPool_clicked()
 
 void CommandModeWindow::on_save_rom_as_triggered()
 {
+    if (!loaded) { return; }
     QString filename = QFileDialog::getSaveFileName(this, tr("Save project"),
                                                       "~/Desktop/prog.rom",
                                                       tr("*.rom"));
@@ -570,6 +631,7 @@ void CommandModeWindow::on_save_rom_as_triggered()
 
 void CommandModeWindow::on_programWidget_cellClicked(int row, int column)
 {
+    if (!loaded) { return; }
     if (row >= mk.rom.program_as_commands_codes_and_args_order.size()) {
         return;
     }

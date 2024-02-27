@@ -10,6 +10,8 @@
 #include <mainwindow.h>
 #include <createisa.h>
 #include <command.h>
+#include <map>
+#include <unordered_set>
 
 namespace Ui {
 class CommandModeWindow;
@@ -22,6 +24,8 @@ class CommandModeWindow : public QMainWindow
 public:
     explicit CommandModeWindow(QWidget *parent = nullptr);
     ~CommandModeWindow();
+
+    bool loaded = false;
 
     MK589 mk;
 
@@ -78,7 +82,7 @@ private slots:
 
     void on_save_rom_as_triggered();
 
-    void on_programWidget_itemClicked(QTableWidgetItem *item);
+    //void on_programWidget_itemClicked(QTableWidgetItem *item);
 
     void on_programWidget_cellClicked(int row, int column);
 
@@ -120,7 +124,7 @@ private:
 
     WORD* PC;
 
-    bool loaded = false;
+    // bool loaded = false;
 
     bool mkwrite = false;
 
@@ -133,11 +137,15 @@ private:
     using Code = size_t;
     using Name = std::string;
     using Address = std::pair<size_t, size_t>;
-    std::map<Code, std::pair<Name, Address>> command_code_to_name_and_cell_address = {};
-    std::list<Code> commands_codes_list = {};
+    using Args = std::pair<size_t, size_t>;
+    using CalledCommand = std::pair<Code, Args>;
+    // Command: Code, X, Y, Tag
 
-    std::vector<std::vector<std::shared_ptr<QTableWidgetItem>>> command_pool = {};
-    std::vector<std::vector<std::shared_ptr<QTableWidgetItem>>> program = {};
+    std::map<Code, std::pair<Name, Address>> code_to_name_and_address = {};
+    std::list<CalledCommand> program = {};  // CalledCommand: Code, Arg1, Arg2
+
+    std::vector<std::vector<std::shared_ptr<QTableWidgetItem>>> command_pool_widget_matrix = {};
+    std::list<std::vector<std::shared_ptr<QTableWidgetItem>>> command_list_widget_matrix = {};
 };
 
 #endif // COMMANDMODEWINDOW_H

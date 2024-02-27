@@ -15,6 +15,7 @@ public:
     MK589& operator=(const MK589& mk);
     std::vector<CPE> cpe_arr;
     ROM rom {}; // rom with microprogramm
+    ROM getRom() const;
     RAM ram {}; // read/write memory
     MCU mcu {};
     void reset();

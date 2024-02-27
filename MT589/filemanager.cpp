@@ -60,13 +60,13 @@ fm::programm_data fm::get_data(const std::string& filename) {
     start_row = data["start"]["row"].get<int>();
     start_col = data["start"]["col"].get<int>();
 
-
+    size_t commands = 0;
     for (size_t col = 0; col < 16; ++col) {
         for (size_t row = 0; row < 32; ++row) {
             microcommand command;
             json command_data = data["matrix"][std::to_string(row) + "-" + std::to_string(col)];
 
-            command.empty = command_data["empty"].get<bool>();
+            command.set_empty(command_data["empty"].get<bool>());
             command.F = std::bitset<7>(command_data["F"].get<std::string>());
             command.I = command_data["I"].get<int>();
             command.index_F = command_data["index_F"].get<int>();
@@ -88,12 +88,14 @@ fm::programm_data fm::get_data(const std::string& filename) {
             // Upgrade to command mode
             command.tag = command_data["Tag"].get<std::string>();
             command.is_command_entrypoint = command_data["is_command_entrypoint"].get<bool>();
-            std::cerr<<"READ TAG"<<command.tag<<" ";
+            if (command_data["is_command_entrypoint"].get<bool>() == true) { ++commands; }
+            // std::cerr<<"READ TAG"<<command.tag<<" ";
             command.command_code = command_data["command_code"].get<size_t>();
 
             mk.rom.write(row, col, command);
         }
     }
+    std::cerr<<"ENTRYPOINTS READ "<<commands<<std::endl;
 
     if (data.contains("program")) {
         json commands_infos = data["program"];
@@ -125,10 +127,10 @@ void fm::save(const std::string& filename, MK589& mk, int startCol, int startRow
 
     for (size_t col = 0; col < 16; ++col) {
         for (size_t row = 0; row < 32; ++row) {
-            microcommand command = mk.rom.read(row, col);
+            microcommand command = mk.rom.getMicrocommand(row, col);
             json command_data;
 
-            command_data["empty"] = command.empty;
+            command_data["empty"] = command.is_empty();
             command_data["F"] = command.F.to_string();
             command_data["I"] = command.I;
             command_data["index_F"] = command.index_F;

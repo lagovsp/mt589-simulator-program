@@ -17,6 +17,8 @@ int main(int argc, char *argv[])
             break;
         }
     }
+
+    QApplication::setStyle("fusion");
     a.setWindowIcon(QIcon(":/logo.png"));
     MainWindow w;
     w.setWindowIcon(QIcon(":/logo.png"));

@@ -38,9 +38,9 @@ ROMWindow::~ROMWindow()
 void ROMWindow::setupItems() {
     for (size_t row = 0; row < 32; ++row) {
         for (size_t col = 0; col < 16; ++col) {
-            microcommand command = mk.rom.read(row, col);
+            microcommand command = mk.rom.getMicrocommand(row, col);
             QTableWidgetItem* item = items[row][col];
-            if (command.empty) {
+            if (command.is_empty()) {
                 item->setBackground(transparentColor);
             } else {
                 item->setBackground(QBrush(Qt::blue));

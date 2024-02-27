@@ -4,7 +4,6 @@
 #include "mt_global.h"
 
 struct microcommand {
-    bool empty = true;
 
     std::bitset<7> AC;
     BYTE FC : 4;
@@ -31,14 +30,21 @@ struct microcommand {
     // For programming mode -->^
     bool is_command_entrypoint = false;
     size_t command_code = 0;
+
+    bool is_empty() const;
+    void set_empty(bool flag);
+    microcommand& operator=(const microcommand& mc) = default;
+private:
+    bool empty = true;
 };
 
 struct ROM
 {
     ROM();
+    ROM& operator=(const ROM& rom);
     void write(size_t row, size_t col, microcommand cmd);
-    microcommand read(size_t row, size_t col);
-    bool is_nop(size_t row, size_t col);
+    microcommand getMicrocommand(size_t row, size_t col) const;
+    bool is_nop(size_t row, size_t col) const;
 
     std::vector<std::vector<microcommand>> memory;
     const size_t _rows = 0x20; // 32

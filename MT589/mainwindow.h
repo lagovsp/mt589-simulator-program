@@ -127,7 +127,7 @@ private:
 
     std::vector<QLCDNumber*> regLCDs = {};
 
-    std::vector<std::vector<QTableWidgetItem*>> matrixItems;
+    std::vector<std::vector<std::shared_ptr<QTableWidgetItem>>> matrixItems;
 
     std::vector<QTableWidgetItem*> ramItems;
 

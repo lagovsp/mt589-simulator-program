@@ -22,6 +22,11 @@
     <height>700</height>
    </size>
   </property>
+  <property name="font">
+   <font>
+    <bold>true</bold>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>MT589 (Command mode)</string>
   </property>
@@ -5677,6 +5682,7 @@
      </property>
      <property name="font">
       <font>
+       <bold>true</bold>
        <stylestrategy>PreferDefault</stylestrategy>
       </font>
      </property>
@@ -6329,8 +6335,8 @@
         <colorrole role="WindowText">
          <brush brushstyle="SolidPattern">
           <color alpha="255">
-           <red>4</red>
-           <green>255</green>
+           <red>147</red>
+           <green>226</green>
            <blue>0</blue>
           </color>
          </brush>
@@ -6519,10 +6525,10 @@
        <inactive>
         <colorrole role="WindowText">
          <brush brushstyle="SolidPattern">
-          <color alpha="216">
-           <red>255</red>
-           <green>255</green>
-           <blue>255</blue>
+          <color alpha="255">
+           <red>147</red>
+           <green>226</green>
+           <blue>0</blue>
           </color>
          </brush>
         </colorrole>
@@ -6899,6 +6905,11 @@
         </colorrole>
        </disabled>
       </palette>
+     </property>
+     <property name="font">
+      <font>
+       <bold>true</bold>
+      </font>
      </property>
      <property name="layoutDirection">
       <enum>Qt::LeftToRight</enum>

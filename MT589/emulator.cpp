@@ -6,8 +6,9 @@ MK589::MK589() {
 }
 MK589& MK589::operator=(const MK589 &mk) {
     // Guard self assignment
-    if (this == &mk)
+    if (this == &mk) {
         return *this;
+    }
     this->reset();
     cpe_arr.resize(mk.cpe_amount);
     MAR = mk.MAR;
@@ -23,7 +24,8 @@ MK589& MK589::operator=(const MK589 &mk) {
     for (size_t i = 0; i < cpe_amount; ++i) {
         cpe_arr[i].reset();
     }
-    rom.memory = mk.rom.memory;
+    rom = mk.rom;
+    // rom.memory = mk.rom.memory;
     rom.program_as_commands_codes_and_args_order = mk.rom.program_as_commands_codes_and_args_order;
     return *this;
 }
@@ -43,8 +45,9 @@ MK589::MK589(const MK589& mk) {
     for (size_t i = 0; i < cpe_amount; ++i) {
         cpe_arr[i].reset();
     }
-    rom.memory = mk.rom.memory;
-    rom.program_as_commands_codes_and_args_order = mk.rom.program_as_commands_codes_and_args_order;
+    rom = mk.rom;
+    // rom.memory = mk.rom.memory;
+    // rom.program_as_commands_codes_and_args_order = mk.rom.program_as_commands_codes_and_args_order;
 }
 
 void MK589::reset() {
@@ -64,6 +67,11 @@ void MK589::reset() {
         cpe_arr[i].reset();
     }
     mcu.reset();
+}
+
+ROM MK589::getRom() const {
+    auto r = rom;
+    return r;
 }
 
 void MK589::do_fetch_decode_execute_cycle(const microcommand &mc) {

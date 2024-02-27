@@ -43,11 +43,13 @@ void MainWindow::setupMatrix() {
     ui->tableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
 
     for (size_t i = 0; i < 32; ++i) {
-        std::vector<QTableWidgetItem*> row;
+        // std::vector<QTableWidgetItem*> row;
+        std::vector<std::shared_ptr<QTableWidgetItem>> row;
         for (size_t j = 0; j < 16; ++j) {
-            QTableWidgetItem* item = new QTableWidgetItem();
-            row.push_back(item);
-            ui->tableWidget->setItem(i, j, item);
+            QTableWidgetItem item;
+            // row.push_back(item);
+            row.push_back(std::make_shared<QTableWidgetItem>(item));
+            ui->tableWidget->setItem(i, j, row.back().get());
         }
         matrixItems.push_back(row);
     }
@@ -83,7 +85,7 @@ void MainWindow::on_stepButton_clicked()
         model.currentPoint = model.startPoint;
     }
     Point currentPoint = model.currentPoint;
-    microcommand command = mk.rom.read(currentPoint.row, currentPoint.col);
+    microcommand command = mk.rom.getMicrocommand(currentPoint.row, currentPoint.col);
     std::string ac = command.AC.to_string();
 
     if (command.CS == 0b1 and command.RW == 0b0 and command.EA == 0b1) {
@@ -118,7 +120,7 @@ void MainWindow::on_runButton_clicked()
     ui->stepButton->setEnabled(false);
     while (model.getMode() == running) {
         Point currentPoint = model.currentPoint;
-        microcommand command = mk.rom.read(currentPoint.row, currentPoint.col);
+        microcommand command = mk.rom.getMicrocommand(currentPoint.row, currentPoint.col);
 
         mk.do_fetch_decode_execute_cycle(command);
 
@@ -370,9 +372,9 @@ void MainWindow::fillInputs() {
     } else {
         auto point = model.currentPoint;
 
-        microcommand command = mk.rom.read(point.row, point.col);
+        microcommand command = mk.rom.getMicrocommand(point.row, point.col);
 
-        if (command.empty) {
+        if (command.is_empty()) {
             ui->boxCPE->setCurrentIndex(0);
             ui->boxFC1->setCurrentIndex(0);
             ui->boxFC2->setCurrentIndex(0);
@@ -422,7 +424,7 @@ void MainWindow::on_saveButton_clicked()
     command.F = f;
     command.I = i;
     command.K = k;
-    command.empty = false;
+    command.set_empty(false);
 
     command.index_F = ui->boxCPE->currentIndex();
     command.index_FIC = ui->boxFC1->currentIndex();
@@ -490,28 +492,31 @@ void MainWindow::setItemColor(Point point) {
     if (point.isNull()) {
         return;
     }
-    microcommand command = mk.rom.read(point.row, point.col);
-    QTableWidgetItem* item = matrixItems[point.row][point.col];
+    microcommand command = mk.getRom().getMicrocommand(point.row, point.col);
+    auto item = matrixItems[point.row][point.col].get();
+    // QTableWidgetItem* item = new QTableWidgetItem;
     if (model.getMode() == running) {
         if (point == model.currentPoint) {
             item->setBackground(currentRunningColor);
         } else if (point == model.startPoint) {
             item->setBackground(startColor);
-        } else if (command.empty) {
-            item->setBackground(transparentColor);
-        } else {
-            item->setBackground(commandColor);
-        }
-    } else {
-        if (point == model.startPoint) {
-            item->setBackground(startColor);
-        } else if (command.empty) {
+        } else if (command.is_empty()) {
             item->setBackground(transparentColor);
         } else {
             item->setBackground(commandColor);
         }
     }
-    item->setText(command.tag.c_str());
+    else {
+        if (point == model.startPoint) {
+            item->setBackground(startColor);
+        } else if (command.is_empty()) {
+            item->setBackground(transparentColor);
+        } else {
+            item->setBackground(commandColor); // error from here
+        }
+    }
+    auto t = command.tag;
+    item->setText(t.c_str());
     item->setForeground(QBrush(Qt::white));
 }
 
@@ -523,8 +528,8 @@ void MainWindow::configUIMode() {
 
         Point point = model.currentPoint;
         if (!point.isNull()) {
-            microcommand command = mk.rom.read(point.row, point.col);
-            if (command.empty) {
+            microcommand command = mk.rom.getMicrocommand(point.row, point.col);
+            if (command.is_empty()) {
                 setMode(editing);
                 configUIMode();
             }
@@ -590,10 +595,11 @@ void MainWindow::on_save_file_as_triggered()
 
 void MainWindow::on_open_file_triggered()
 {
+    loaded = false;
+
     std::string filename = QFileDialog::getOpenFileName(this, tr("Open project"),
                                                     "~/Desktop/prog.rom",
                                                     tr("*.rom")).toStdString();
-
 
     if (filename.empty()) { return; }
     fm::programm_data data = fm::get_data(filename);
@@ -605,14 +611,7 @@ void MainWindow::on_open_file_triggered()
     fillInputs();
     model.current_filename = filename;
 
-    fm::programm_data data1 = fm::get_data(filename);
-
-    model.startPoint = Point(data1.start_row, data1.start_col);
-    setItemColor(model.startPoint);
-    mk = data1.mk;
-    setupItems();
-    fillInputs();
-    model.current_filename = filename;
+    loaded = true;
 }
 
 void MainWindow::on_save_file_triggered()
@@ -630,20 +629,66 @@ void MainWindow::on_save_file_triggered()
 
 void MainWindow::on_open_command_mode_triggered()
 {
-    CommandModeWindow* window = new CommandModeWindow();
-    window->mk = mk;
-    window->model = model;
-    window->setupCommandPool();
-    window->displayCommandPool();
-    window->scanProgram();
-    window->displayProgram();
-    window->show();
+
+    CommandModeWindow* command_window = new CommandModeWindow();
+    command_window->loaded=false;
+    command_window->mk = mk;
+    command_window->model = model;
+    command_window->setupCommandPool();
+    command_window->displayCommandPool();
+    command_window->scanProgram();
+    command_window->displayProgram();
+    command_window->show();
+    command_window->loaded=false;
     this->hide();
 }
 
 void MainWindow::setupItems() {
+    // std::cerr<<"setupItems:"<<std::endl;
+
+    // size_t c = 0;
+    // std::unordered_set<size_t> codes_set;
+    // for (size_t col = 0; col < 16; ++col) {
+    //     for (size_t row = 0; row < 32; ++row) {
+    //         if (mk.rom.getMicrocommand(row, col).is_command_entrypoint == true) {
+    //             ++c;
+    //             codes_set.insert(mk.rom.getMicrocommand(row, col).command_code);
+    //         }
+    //     }
+    // }
+    // std::cerr <<"now ; c = "<<c<<"; set size = "<<codes_set.size()<< std::endl;
+
+
     for (size_t row = 0; row < 32; ++row) {
+        // std::cerr<<"row = "<<row<<std::endl;
+
+        // size_t c = 0;
+        // std::unordered_set<size_t> codes_set;
+        // for (size_t col = 0; col < 16; ++col) {
+        //     for (size_t row = 0; row < 32; ++row) {
+        //         if (mk.rom.getMicrocommand(row, col).is_command_entrypoint == true) {
+        //             ++c;
+        //             codes_set.insert(mk.rom.getMicrocommand(row, col).command_code);
+        //         }
+        //     }
+        // }
+        // std::cerr <<"now ; c = "<<c<<"; set size = "<<codes_set.size()<< std::endl;
+
         for (size_t col = 0; col < 16; ++col) {
+            // std::cerr<<"col = "<<col<<std::endl;
+
+            // size_t c = 0;
+            // std::unordered_set<size_t> codes_set;
+            // for (size_t col = 0; col < 16; ++col) {
+            //     for (size_t row = 0; row < 32; ++row) {
+            //         if (mk.rom.getMicrocommand(row, col).is_command_entrypoint == true) {
+            //             ++c;
+            //             codes_set.insert(mk.rom.getMicrocommand(row, col).command_code);
+            //         }
+            //     }
+            // }
+            // std::cerr <<"now ; c = "<<c<<"; set size = "<<codes_set.size()<< std::endl;
+
             setItemColor(Point(row, col));
         }
     }
@@ -655,7 +700,7 @@ void MainWindow::on_tableWidget_cellChanged(int row, int column)
         return;
     }
     std::string content = matrixItems[row][column]->text().toStdString();
-    microcommand command = mk.rom.read(row, column);
+    microcommand command = mk.rom.getMicrocommand(row, column);
     if (content == "") {
         command.is_command_entrypoint = false;
     }
