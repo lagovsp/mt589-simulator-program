@@ -7,18 +7,26 @@
 #include <QString>
 #include <createisa.h>
 #include <iostream>
-#include <unordered_set>
 
 
 void CommandModeWindow::displayCommandPool() {
-    ui->commandPoolTableWidget->setHorizontalHeaderLabels({"Адрес", "Имя"});
+    auto &cpwm = mainWindow->command_pool_widget_matrix;
+
+    QStringList labels = {"Адрес", "Имя"};
+    ui->commandPoolTableWidget->setHorizontalHeaderLabels(labels);
     ui->commandPoolTableWidget->horizontalHeader()->sectionResizeMode(QHeaderView::Fixed);
 
-    auto &cpwm = mainWindow->command_pool_widget_matrix;
+    ui->commandPoolTableWidget->setRowCount(cpwm.size()); // ?
+    ui->commandPoolTableWidget->setColumnCount(labels.size());
+    ui->commandPoolTableWidget->setHorizontalHeaderLabels(labels);
+    ui->commandPoolTableWidget->horizontalHeader()->sectionResizeMode(QHeaderView::Fixed);
+    ui->commandPoolTableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
+
     for (size_t i = 0; i < cpwm.size(); ++i) {
-        ui->commandPoolTableWidget->setItem(i, 0, cpwm[i][0]);
-        ui->commandPoolTableWidget->setItem(i, 1, cpwm[i][1]);
-        ui->commandPoolTableWidget->setItem(i, 2, cpwm[i][2]);
+        for (size_t j = 0; j < labels.size(); ++j) {
+            ui->commandPoolTableWidget->setItem(i, j, cpwm[i][j]);
+            ui->commandPoolTableWidget->setItem(i, j, cpwm[i][j]);
+        }
     }
 }
 
@@ -164,13 +172,18 @@ void CommandModeWindow::update_on_cpu_data() {
 void CommandModeWindow::on_open_microcommand_mode_triggered()
 {
     if (!loaded) { return; }
+    loaded = false;
+
     MainWindow* window = new MainWindow();
     window->mk = mk;
     window->model = model;
-    window->show();
-    this->hide();
+
     window->setupItems();
     window->fillInputs();
+    this->hide();
+    window->show();
+
+    loaded = true;
 }
 
 void CommandModeWindow::on_resetButton_clicked()
@@ -518,9 +531,17 @@ void CommandModeWindow::on_programWidget_cellClicked(int row, int column)
     auto [rowSelected, columnSelected] = mk.rom.program[row];
     auto [arg1, arg2] = mk.rom.addresses_args_pairs[rowSelected][columnSelected];
 
-    ui->codeBox->setText(QString((std::to_string(rowSelected) + "-" + std::to_string(columnSelected)).c_str()));
-    ui->op1Box->setText(QString((std::to_string(arg1)).c_str()));
-    ui->op2Box->setText(QString((std::to_string(arg2)).c_str()));
+    QString address = QString::number(rowSelected) + "-" + QString::number(columnSelected);
+    ui->codeBox->setText(address);
+    ui->codeBox->setAlignment(Qt::AlignCenter);
+
+    QString arg11 = QString::number(arg1);
+    ui->op1Box->setText(arg11);
+    ui->op1Box->setAlignment(Qt::AlignCenter);
+
+    QString arg22 = QString::number(arg2);
+    ui->op2Box->setText(arg22);
+    ui->op2Box->setAlignment(Qt::AlignCenter);
 
     loaded=true;
 }

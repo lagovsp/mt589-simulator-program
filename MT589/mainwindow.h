@@ -178,6 +178,7 @@ public:
     // Command: Code, X, Y, Tag
     //std::list<CalledCommand> program = {};  // CalledCommand: Code, Arg1, Arg2
 
+    // erfe
     std::vector<std::vector<QTableWidgetItem*>> command_pool_widget_matrix = {};
     std::vector<std::vector<QTableWidgetItem*>> command_list_widget_matrix = {};
 };
