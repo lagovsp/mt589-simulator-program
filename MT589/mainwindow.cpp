@@ -291,7 +291,7 @@ void MainWindow::on_stepButton_clicked()
 
     mk.do_fetch_decode_execute_cycle(command);
     if (command.CS == 0b1 and command.RW == 0b1 and mk.ED == 0b1 and mk.EA == 0b1) {
-            // write
+        // write
         ramItems[mk.A.value()]->setText(std::to_string(mk.D.value()).c_str());
     }
     Point nextPoint = Point(mk.get_row_adr(), mk.get_col_adr());

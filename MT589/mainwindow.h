@@ -155,19 +155,19 @@ private:
     std::vector<Address> selected_commands_addresses;
     std::vector<std::vector<QTableWidgetItem*>> selectedCommandItems;
 
+public:
     std::vector<QTableWidgetItem*> ramItems;
 
     // States & Data
 
     // Model model = Model();
-
     QBrush commandColor = QBrush(Qt::blue);
     QBrush startColor = QBrush(Qt::green);
     QBrush traceColor = QBrush(Qt::cyan);
     QBrush transparentColor = QBrush(Qt::transparent);
 
     QBrush currentRunningColor = QBrush(Qt::red); // run mode
-
+private:
     bool loaded = false;
 
     bool listingIsBeingChanged = false;

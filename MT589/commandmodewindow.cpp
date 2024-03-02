@@ -189,120 +189,205 @@ void CommandModeWindow::on_open_microcommand_mode_triggered()
 void CommandModeWindow::on_resetButton_clicked()
 {
     if (!loaded) { return; }
+    loaded = false;
     WORD oldRow = *PC;
     mk.reset();
     mk.load(0b10100000);
     update_on_cpu_data();
 
     changeCurrentRow(oldRow, *PC);
+    loaded = true;
+}
+
+void CommandModeWindow::displayTracker(int cit_old, int cit_new) {
+    if (cit_old >= 0) {
+        mainWindow->command_list_widget_matrix[cit_old][0]->setBackground(mainWindow->transparentColor);
+        mainWindow->command_list_widget_matrix[cit_old][1]->setBackground(mainWindow->transparentColor);
+        mainWindow->command_list_widget_matrix[cit_old][2]->setBackground(mainWindow->transparentColor);
+        mainWindow->command_list_widget_matrix[cit_old][3]->setBackground(mainWindow->transparentColor);
+    }
+    if (cit_new >= mk.rom.program.size()) {
+        return;
+    }
+    mainWindow->command_list_widget_matrix[cit_new][0]->setBackground(mainWindow->currentRunningColor);
+    mainWindow->command_list_widget_matrix[cit_new][1]->setBackground(mainWindow->currentRunningColor);
+    mainWindow->command_list_widget_matrix[cit_new][2]->setBackground(mainWindow->currentRunningColor);
+    mainWindow->command_list_widget_matrix[cit_new][3]->setBackground(mainWindow->currentRunningColor);
 }
 
 void CommandModeWindow::on_stepButton_clicked()
 {
     if (!loaded) { return; }
-    bool is_loadmem_prog_running = true;
-    WORD oldRow = *PC;
-    while (is_loadmem_prog_running) {
-        size_t r = mk.get_row_adr();
-        size_t c = mk.get_col_adr();
-        auto command = mk.rom.getMicrocommand(r, c);
-        if (command.is_empty()) { return; }
-        if (command.CS == 0b1 and command.RW == 0b0 and command.EA == 0b1) {
-            // read
-            command.M = mk.ram.read(mk.MAR);
-        } else {
-            command.M = 0x00;
-        }
+    loaded = false;
 
-        if (command.LD == 0b1) {
-            is_loadmem_prog_running = false;
-        }
-        mk.do_fetch_decode_execute_cycle(command);
+    // bool is_loadmem_prog_running = true;
+    WORD oldRow = *PC;
+    // while (is_loadmem_prog_running) {
+    //     size_t r = mk.get_row_adr();
+    //     size_t c = mk.get_col_adr();
+    //     auto command = mk.rom.getMicrocommand(r, c);
+    //     if (command.is_empty()) { return; }
+    //     if (command.CS == 0b1 and command.RW == 0b0 and command.EA == 0b1) {
+    //         // read
+    //         command.M = mk.ram.read(mk.MAR);
+    //     } else {
+    //         command.M = 0x00;
+    //     }
+
+    //     if (command.LD == 0b1) {
+    //         is_loadmem_prog_running = false;
+    //     }
+    //     mk.do_fetch_decode_execute_cycle(command);
 //        if (command.CS == 0b1 and command.RW == 0b1 and mk.EA == 0b1 and mk.ED == 0b1) {
 //            // write
 //            items[mk.A.value()]->setText(toHex(mk.D.value()).c_str());
 //        }
-    }
-    size_t current_row = mk.get_row_adr();
-    size_t current_col = mk.get_col_adr();
+    // }
+    // size_t current_row = mk.get_row_adr();
+    // size_t current_col = mk.get_col_adr();
 
-    while (current_row != 0 && current_col != 10) {
-        auto command = mk.rom.getMicrocommand(current_row, current_col);
-        if (command.is_empty()) { break; }
-        if (command.CS == 0b1 and command.RW == 0b0 and command.EA == 0b1) {
-            // read
-            command.M = mk.ram.read(mk.MAR);
-        } else {
-            command.M = 0x00;
+    // while (current_row != 0 && current_col != 10) {
+    //     auto command = mk.rom.getMicrocommand(current_row, current_col);
+    //     if (command.is_empty()) { break; }
+    //     if (command.CS == 0b1 and command.RW == 0b0 and command.EA == 0b1) {
+    //         // read
+    //         command.M = mk.ram.read(mk.MAR);
+    //     } else {
+    //         command.M = 0x00;
+    //     }
+    //     mk.do_fetch_decode_execute_cycle(command);
+    //     if (command.CS == 0b1 and command.RW == 0b1 and mk.EA == 0b1 and mk.ED == 0b1) {
+    //         // write
+    //         mkwrite = true;
+    //         items[mk.A.value()]->setText(toHex(mk.D.value()).c_str()); //
+    //         mkwrite = false;
+    //     }
+    //     current_row = mk.get_row_adr();
+    //     current_col = mk.get_col_adr();
+    // }
+    // WORD newRow = *PC;
+    // changeCurrentRow(oldRow, newRow);
+    // update_on_cpu_data();
+
+    displayTracker(cur_command_number-1, cur_command_number);
+    bool fin_flag = false;
+    while (fin_flag) {
+        size_t r = mk.get_row_adr();
+        size_t c = mk.get_col_adr();
+        auto command_address = Point(r, c);
+        while (true) {
+            auto [row, column] = with_command_execute_microcommand(command_address.row, command_address.col, fin_flag);
+            command_address.row = row;
+            command_address.col = column;
         }
-        mk.do_fetch_decode_execute_cycle(command);
-        if (command.CS == 0b1 and command.RW == 0b1 and mk.EA == 0b1 and mk.ED == 0b1) {
-            // write
-            mkwrite = true;
-            items[mk.A.value()]->setText(toHex(mk.D.value()).c_str()); //
-            mkwrite = false;
-        }
-        current_row = mk.get_row_adr();
-        current_col = mk.get_col_adr();
     }
-    WORD newRow = *PC;
-    changeCurrentRow(oldRow, newRow);
-    update_on_cpu_data();
+    ++cur_command_number;
+    loaded = true;
 }
 
+std::pair<size_t, size_t> CommandModeWindow::with_command_execute_microcommand(size_t row, size_t col, bool& fin) {
+    if (model.getMode() == editing) {
+        model.setMode(running);
+    }
+
+    auto current_point = Point(row, col);
+    microcommand command = mk.rom.getMicrocommand(current_point.row, current_point.col);
+    std::string ac = command.AC.to_string();
+
+    if (command.CS == 0b1 and command.RW == 0b0 and command.EA == 0b1) {
+        // read
+        command.M = mk.ram.read(mk.MAR);
+    } else {
+        command.M = 0x00;
+    }
+
+    mk.do_fetch_decode_execute_cycle(command);
+    if (command.CS == 0b1 and command.RW == 0b1 and mk.ED == 0b1 and mk.EA == 0b1) {
+        // write
+        mainWindow->ramItems[mk.A.value()]->setText(std::to_string(mk.D.value()).c_str());
+    }
+    auto nextPoint = Point(mk.get_row_adr(), mk.get_col_adr());
+
+    model.currentPoint = nextPoint;
+
+    //configUIMode();
+    mainWindow->changeCurrentPoint(current_point, nextPoint);
+    update_on_cpu_data();
+    fin = command.LD;
+}
 void CommandModeWindow::on_runButton_clicked()
 {
     if (!loaded) { return; }
-    while (true) {
-        bool is_loadmem_prog_running = true;
-        WORD oldRow = *PC;
-        while (is_loadmem_prog_running) {
-            size_t r = mk.get_row_adr();
-            size_t c = mk.get_col_adr();
-            auto command = mk.rom.getMicrocommand(r, c);
-            if (command.is_empty()) { return; }
-            if (command.CS == 0b1 and command.RW == 0b0 and command.EA == 0b1) {
-                // read
-                command.M = mk.ram.read(mk.MAR);
-            } else {
-                command.M = 0x00;
-            }
+    loaded = false;
+    // while (true) {
+    //     bool is_loadmem_prog_running = true;
+    //     WORD oldRow = *PC;
+    //     while (is_loadmem_prog_running) {
+    //         size_t row = mk.get_row_adr();
+    //         size_t column = mk.get_col_adr();
+    //         auto command = mk.rom.getMicrocommand(row, column);
+    //         if (command.is_empty()) {
+    //             return;
+    //         }
+    //         if (command.CS == 0b1 and command.RW == 0b0 and command.EA == 0b1) {
+    //             // read
+    //             command.M = mk.ram.read(mk.MAR);
+    //         } else {
+    //             command.M = 0x00;
+    //         }
 
-            if (command.LD == 0b1) {
-                is_loadmem_prog_running = false;
-            }
-            mk.do_fetch_decode_execute_cycle(command);
+    //         if (command.LD == 0b1) {
+    //             is_loadmem_prog_running = false;
+    //         }
+    //         mk.do_fetch_decode_execute_cycle(command);
     //        if (command.CS == 0b1 and command.RW == 0b1 and mk.EA == 0b1 and mk.ED == 0b1) {
     //            // write
     //            items[mk.A.value()]->setText(toHex(mk.D.value()).c_str());
     //        }
-        }
-        size_t current_row = mk.get_row_adr();
-        size_t current_col = mk.get_col_adr();
+        // }
+        // size_t current_row = mk.get_row_adr();
+        // size_t current_col = mk.get_col_adr();
 
-        while (current_row != 0 && current_col != 10) {
-            auto command = mk.rom.getMicrocommand(current_row, current_col);
-            if (command.is_empty()) { break; }
-            if (command.CS == 0b1 and command.RW == 0b0 and command.EA == 0b1) {
-                // read
-                command.M = mk.ram.read(mk.MAR);
-            } else {
-                command.M = 0x00;
-            }
-            mk.do_fetch_decode_execute_cycle(command);
-            if (command.CS == 0b1 and command.RW == 0b1 and mk.EA == 0b1 and mk.ED == 0b1) {
-                // write
-                mkwrite = true;
-                items[mk.A.value()]->setText(toHex(mk.D.value()).c_str());
-                mkwrite = false;
-            }
-            current_row = mk.get_row_adr();
-            current_col = mk.get_col_adr();
-        }
-        WORD newRow = *PC;
-        changeCurrentRow(oldRow, newRow);
-        update_on_cpu_data();
+        // while (current_row != 0 && current_col != 10) {
+        //     auto command = mk.rom.getMicrocommand(current_row, current_col);
+        //     if (command.is_empty()) { break; }
+        //     if (command.CS == 0b1 and command.RW == 0b0 and command.EA == 0b1) {
+        //         // read
+        //         command.M = mk.ram.read(mk.MAR);
+        //     } else {
+        //         command.M = 0x00;
+        //     }
+        //     mk.do_fetch_decode_execute_cycle(command);
+        //     if (command.CS == 0b1 and command.RW == 0b1 and mk.EA == 0b1 and mk.ED == 0b1) {
+        //         // write
+        //         mkwrite = true;
+        //         items[mk.A.value()]->setText(toHex(mk.D.value()).c_str());
+        //         mkwrite = false;
+        //     }
+        //     current_row = mk.get_row_adr();
+        //     current_col = mk.get_col_adr();
+        // }
+        // WORD newRow = *PC;
+        // changeCurrentRow(oldRow, newRow);
+        // update_on_cpu_data();
+    // }
+
+    if (mk.rom.program.size() == 0) {
+        return;
     }
+    for (auto cit = mk.rom.program.begin(); cit != mk.rom.program.end(); ++cit) {
+        auto command_address = Point(cit->first, cit->second);
+        bool fin_flag = false;
+        while (true) {
+            auto [row, column] = with_command_execute_microcommand(cit->first, cit->second, fin_flag);
+            command_address.row = row;
+            command_address.col = column;
+            if (fin_flag) {
+                break;
+            }
+        }
+    }
+    loaded = true;
 }
 
 void CommandModeWindow::on_endButton_clicked()
@@ -310,48 +395,49 @@ void CommandModeWindow::on_endButton_clicked()
     if (!loaded) { return; }
 }
 
-WORD CommandModeWindow::parseCommand(const std::string& str) {
-    if (!loaded) {
-        return 0;
-    }
-    std::stringstream ss(str);
-    std::string cmd;
-    ss >> cmd;
+// WORD CommandModeWindow::parseCommand(const std::string& str) {
+    // if (!loaded) {
+        // return 0;
+    // }
+    // std::stringstream ss(str);
+    // std::string cmd;
+    // ss >> cmd;
 
-    if (isa_commands.count(cmd) == 0) {
-        return 0;
-    }
-    if (isa_commands[cmd] > 0xFF) {
-        return isa_commands[cmd];
-    }
-    WORD com = isa_commands[cmd];
-    std::string arg;
-    ss >> arg;
-    com = (com << 8) | (arg.empty() ? 0 : parseHex(arg));
-    return com;
-}
+    // if (isa_commands.count(cmd) == 0) {
+        // return 0;
+    // }
+    // if (isa_commands[cmd] > 0xFF) {
+        // return isa_commands[cmd];
+    // }
+    // WORD com = isa_commands[cmd];
+    // std::string arg;
+    // ss >> arg;
+    // com = (com << 8) | (arg.empty() ? 0 : parseHex(arg));
+    // return com;
+// }
 
 void CommandModeWindow::on_programWidget_cellChanged(int row, int column) {
     if (!loaded) { return; }
+    // we dont allow changing program from ui rn
 
-    std::string rowContent = items[row]->text().toStdString();
-    if (rowContent.empty()) { return; }
-    // (mk.EA == 0b1 and mk.ED == 0b1) {
-    if (mkwrite) {
-        auto data = parseHex(rowContent);
-        mk.ram.write(row, data);
-        return;
-    }
-    WORD word = 0;
-    if (row < 200) {
-        word = parseCommand(rowContent);
-        if (!word) {
-            items[row]->setText("");
-        }
-    } else {
-        word = parseHex(rowContent);
-    }
-    mk.ram.write(row, word);
+    // std::string rowContent = items[row]->text().toStdString();
+    // if (rowContent.empty()) { return; }
+    // // (mk.EA == 0b1 and mk.ED == 0b1) {
+    // if (mkwrite) {
+    //     auto data = parseHex(rowContent);
+    //     mk.ram.write(row, data);
+    //     return;
+    // }
+    // WORD word = 0;
+    // if (row < 200) {
+    //     word = parseCommand(rowContent);
+    //     if (!word) {
+    //         items[row]->setText("");
+    //     }
+    // } else {
+    //     word = parseHex(rowContent);
+    // }
+    // mk.ram.write(row, word);
 }
 
 void CommandModeWindow::changeCurrentRow(WORD oldRow, WORD newRow) {
@@ -451,10 +537,10 @@ void CommandModeWindow::on_load_ram_triggered()
         }
         WORD word = 0;
         if (i < 200) {
-            word = parseCommand(rowContent);
-            if (!word) {
-                items[i]->setText("");
-            }
+            // word = parseCommand(rowContent);
+            // if (!word) {
+            //     items[i]->setText("");
+            // }
         } else {
             word = parseHex(rowContent);
         }

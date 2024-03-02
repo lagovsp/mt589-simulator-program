@@ -31,6 +31,7 @@ public:
 
     Model model;
 
+    int cur_command_number = 0;
     MainWindow* mainWindow = nullptr;
 
     void prepareISAWindowText();
@@ -42,6 +43,10 @@ public:
     // void scanProgram();
     // void putScannedProgramToItems();
     void displayScannedProgram();
+
+    void displayTracker(int, int);
+
+    std::pair<size_t, size_t> with_command_execute_microcommand(size_t row, size_t col, bool&);
 
 private slots:
     void on_open_rom_triggered();
@@ -103,18 +108,18 @@ private:
 
     WORD parseCommand(const std::string& str);
 
-    std::map<std::string, WORD> isa_commands = {
-        {"INCA", 0x0100},
-        {"MOVA", 0x03},
-        {"ADDA", 0x02},
-        {"POP", 0x0500},
-        {"PUSH", 0x04},
-        {"IS", 0x0600},
-        {"INVA", 0x0700},
-        {"SHAR", 0x08},
-        {"SHAL", 0x09},
-        {"JMP", 0xA}
-    };
+    // std::map<std::string, WORD> isa_commands = {
+    //     {"INCA", 0x0100},
+    //     {"MOVA", 0x03},
+    //     {"ADDA", 0x02},
+    //     {"POP", 0x0500},
+    //     {"PUSH", 0x04},
+    //     {"IS", 0x0600},
+    //     {"INVA", 0x0700},
+    //     {"SHAR", 0x08},
+    //     {"SHAL", 0x09},
+    //     {"JMP", 0xA}
+    // };
 
     std::map<std::string, std::string> isa_regs = {
         {"REG0", "PC"},
