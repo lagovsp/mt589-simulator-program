@@ -29,7 +29,7 @@ struct microcommand {
     std::string tag = ""; // -->v
     // For programming mode -->^
     bool is_command_entrypoint = false;
-    size_t command_code = 0;
+    // size_t command_code = 0;
 
     bool is_empty() const;
     void set_empty(bool flag);
@@ -42,18 +42,22 @@ struct ROM
 {
     ROM();
     ROM& operator=(const ROM& rom);
+    const ROM& get() const;
     void write(size_t row, size_t col, microcommand cmd);
-    microcommand getMicrocommand(size_t row, size_t col) const;
+    const microcommand& getMicrocommand(size_t row, size_t col) const;
     bool is_nop(size_t row, size_t col) const;
 
-    std::vector<std::vector<microcommand>> memory;
     const size_t _rows = 0x20; // 32
     const size_t _cols = 0x10; // 16
 
     // for upgrade
     using Args = std::pair<uint16_t, uint16_t>;
-    using Code = size_t;
-    std::vector<std::pair<Code, Args>> program_as_commands_codes_and_args_order;
+    using Name = std::string;
+    using Address = std::pair<size_t, size_t>;
+
+    std::vector<std::vector<microcommand>> memory;
+    std::vector<Address> program;
+    std::vector<std::vector<Args>> addresses_args_pairs;
 };
 
 #endif // ROM_H

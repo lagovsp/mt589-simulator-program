@@ -1,10 +1,12 @@
 #include "emulator.hpp"
+#include <iostream>
 
 MK589::MK589() {
     cpe_arr.resize(cpe_amount);
     this->reset();
 }
 MK589& MK589::operator=(const MK589 &mk) {
+    std::cerr << "MK589& MK589::operator=:\n";
     // Guard self assignment
     if (this == &mk) {
         return *this;
@@ -25,8 +27,6 @@ MK589& MK589::operator=(const MK589 &mk) {
         cpe_arr[i].reset();
     }
     rom = mk.rom;
-    // rom.memory = mk.rom.memory;
-    rom.program_as_commands_codes_and_args_order = mk.rom.program_as_commands_codes_and_args_order;
     return *this;
 }
 
@@ -69,9 +69,8 @@ void MK589::reset() {
     mcu.reset();
 }
 
-ROM MK589::getRom() const {
-    auto r = rom;
-    return r;
+const ROM& MK589::getRom() const {
+    return rom.get();
 }
 
 void MK589::do_fetch_decode_execute_cycle(const microcommand &mc) {

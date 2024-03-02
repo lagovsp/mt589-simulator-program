@@ -28,6 +28,186 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::setupCommandPool() {
+    std::cerr << "void MainWindow::setupCommandPool:\n";
+    // command_pool_widget_matrix.clear();
+
+    // size_t c = 0;
+    // std::unordered_set<size_t> codes_set;
+    // for (size_t row = 0; row < 32; ++row) {
+    //     for (size_t col = 0; col < 16; ++col) {
+    //         auto mc = mk.rom.memory[row][col];
+    //         if (mc.is_command_entrypoint == false) {
+    //             continue;
+    //         }
+    //         std::cerr << row << "-" << col << std::endl;
+    //         ++c;
+    //         codes_set.insert({row, col});
+
+    //         std::vector<QTableWidgetItem*> command_description;
+    //         auto item = new QTableWidgetItem;
+
+    //         item->setText(QString((std::to_string(row) + "-" + std::to_string(col)).c_str()));
+    //         command_description.push_back(item);
+
+    //         item = new QTableWidgetItem;
+    //         item->setText(QString(mk.getRom().getMicrocommand(row, col).tag.c_str()));
+    //         command_description.push_back(item);
+
+    //         item = new QTableWidgetItem;
+    //         item->setText(QString(mc.tag.c_str()));
+    //         command_description.push_back(item);
+
+    //         command_pool_widget_matrix.push_back(command_description);
+    //     }
+    // }
+    // std::cerr <<"Setup command pool: c = " << c << "; set size = "<<codes_set.size()<< std::endl;
+}
+
+void MainWindow::putScannedPoolToItems() {
+    std::cerr << "void MainWindow::putScannedPoolToItems:\n";
+    command_pool_widget_matrix.clear();
+
+    size_t c = 0;
+    std::unordered_set<size_t> codes_set;
+    for (size_t row = 0; row < 32; ++row) {
+        for (size_t col = 0; col < 16; ++col) {
+            auto mc = mk.getRom().getMicrocommand(row, col);
+            if (mc.is_command_entrypoint == false) {
+                continue;
+            }
+            std::cerr << row << "-" << col << std::endl;
+            ++c;
+            codes_set.insert({row, col});
+
+            std::vector<QTableWidgetItem*> command_description;
+            auto item = new QTableWidgetItem;
+
+            item->setText(QString((std::to_string(row) + "-" + std::to_string(col)).c_str()));
+            command_description.push_back(item);
+
+            item = new QTableWidgetItem;
+            item->setText(QString(mk.getRom().getMicrocommand(row, col).tag.c_str()));
+            command_description.push_back(item);
+
+            item = new QTableWidgetItem;
+            item->setText(QString(mc.tag.c_str()));
+            command_description.push_back(item);
+
+            command_pool_widget_matrix.push_back(command_description);
+        }
+    }
+    std::cerr <<"Setup command pool: c = " << c << "; set size = "<<codes_set.size()<< std::endl;
+}
+
+void MainWindow::scanProgram() {
+    std::cerr << "void MainWindow::scanProgram:\n";
+    // mk.rom.program.clear();
+
+    // std::cerr << "SCANPR"<<mk.rom.program.size()<< std::endl;
+
+    // for(const auto& command_code: mk.rom.program) {
+    //     auto [arg1, arg2] = mk.rom.code_to_args.at(command_code);
+    //     mk.rom.code_to_args.insert({command_code, {arg1, arg2}})
+    // }
+}
+
+void MainWindow::putScannedProgramToItems() {
+    std::cerr << "void MainWindow::putScannedProgramToItems:\n";
+    command_list_widget_matrix.clear();
+
+    for (const auto& [row, column]: mk.rom.program) {
+        auto [arg1, arg2] = mk.rom.addresses_args_pairs[row][column];
+
+        std::vector<QTableWidgetItem*> called_command;
+        auto itemPtr = new QTableWidgetItem;
+
+        itemPtr->setText(QString((std::to_string(row) + "-" + std::to_string(column)).c_str()));
+        called_command.push_back(itemPtr);
+
+        itemPtr = new QTableWidgetItem;
+        Name name = mk.getRom().getMicrocommand(row, column).tag; // at to code that disappears from the map ? why????
+        itemPtr->setText(QString(name.c_str()));
+        called_command.push_back(itemPtr);
+
+        itemPtr = new QTableWidgetItem;
+        itemPtr->setText(QString((std::to_string(arg1)).c_str()));
+        called_command.push_back(itemPtr);
+
+        itemPtr = new QTableWidgetItem;
+        itemPtr->setText(QString((std::to_string(arg2)).c_str()));
+        called_command.push_back(itemPtr);
+
+        command_list_widget_matrix.push_back(called_command);
+    }
+}
+
+// void MainWindow::displayScannedProgram() {
+//     ui->programWidget->horizontalHeader()->sectionResizeMode(QHeaderView::Fixed);
+
+//     for (size_t i = 0; i < command_list_widget_matrix.size(); ++i) {
+//         ui->programWidget->setItem(i, 0, command_list_widget_matrix[i][0]);
+//         ui->programWidget->setItem(i, 1, command_list_widget_matrix[i][1]);
+//         ui->programWidget->setItem(i, 2, command_list_widget_matrix[i][2]);
+//         ui->programWidget->setItem(i, 3, command_list_widget_matrix[i][3]);
+//     }
+// }
+
+void MainWindow::putSelectedListToSelectedItems() {
+    selectedCommandItems.clear();
+    for (size_t it = 0; it < selected_commands_addresses.size(); ++it) {
+        std::vector<QTableWidgetItem*> vectorRow;
+
+        auto [row, column] = selected_commands_addresses[it];
+        auto mc = mk.getRom().getMicrocommand(row, column);
+
+        auto itemPtr = new QTableWidgetItem;
+        itemPtr->setText(QString((std::to_string(row) + "-" + std::to_string(column)).c_str()));
+        vectorRow.push_back(itemPtr);
+
+        itemPtr->setText(QString((mc.tag).c_str()));
+        vectorRow.push_back(itemPtr);
+
+        itemPtr->setText(QString(mc.F.to_string().c_str()));
+        vectorRow.push_back(itemPtr);
+
+        itemPtr = new QTableWidgetItem;
+        itemPtr->setText(QString(toHex(mc.K).c_str()));
+        vectorRow.push_back(itemPtr);
+
+        itemPtr = new QTableWidgetItem;
+        itemPtr->setText(QString(toHex(mc.I).c_str()));
+        vectorRow.push_back(itemPtr);
+
+        itemPtr = new QTableWidgetItem;
+        itemPtr->setText(QString(mc.AC.to_string().c_str()));
+        vectorRow.push_back(itemPtr);
+
+        selectedCommandItems.push_back(vectorRow);
+    }
+}
+void MainWindow::displaySelectedCommandListing() {
+    QStringList labels = {"Адрес", "Имя", "F", "K", "I", "AC"};
+    ui->listingWidget->setRowCount(selected_commands_addresses.size());
+    ui->listingWidget->setColumnCount(labels.size());
+    ui->listingWidget->setHorizontalHeaderLabels(labels);
+    ui->listingWidget->setFixedSize(Q)
+    ui->listingWidget->horizontalHeader()->sectionResizeMode(QHeaderView::Fixed);
+    ui->listingWidget->setSelectionMode(QAbstractItemView::NoSelection);
+
+    for (size_t i = 0; i < selected_commands_addresses.size(); ++i) {
+        //auto arg1 = mk.getRom().getMicrocommand();
+        ui->listingWidget->setItem(i, 0, selectedCommandItems[i][0]);
+        ui->listingWidget->setItem(i, 1, selectedCommandItems[i][1]);
+        ui->listingWidget->setItem(i, 2, selectedCommandItems[i][2]);
+        ui->listingWidget->setItem(i, 3, selectedCommandItems[i][3]);
+        ui->listingWidget->setItem(i, 4, selectedCommandItems[i][3]);
+        ui->listingWidget->setItem(i, 5, selectedCommandItems[i][3]);
+        ui->listingWidget->setItem(i, 6, selectedCommandItems[i][3]);
+        ui->listingWidget->setItem(i, 7, selectedCommandItems[i][3]);
+    }
+}
+
 void MainWindow::setupMatrix() {
     QStringList horlist;
     for (size_t i = 0; i < 16; ++i) {
@@ -42,16 +222,16 @@ void MainWindow::setupMatrix() {
     ui->tableWidget->setVerticalHeaderLabels(verlist);
     ui->tableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
 
+    romItems.clear();
     for (size_t i = 0; i < 32; ++i) {
         // std::vector<QTableWidgetItem*> row;
-        std::vector<std::shared_ptr<QTableWidgetItem>> row;
+        std::vector<QTableWidgetItem*> row;
         for (size_t j = 0; j < 16; ++j) {
-            QTableWidgetItem item;
-            // row.push_back(item);
-            row.push_back(std::make_shared<QTableWidgetItem>(item));
-            ui->tableWidget->setItem(i, j, row.back().get());
+            auto itemPtr = new QTableWidgetItem;
+            row.push_back(itemPtr);
+            ui->tableWidget->setItem(i, j, itemPtr);
         }
-        matrixItems.push_back(row);
+        romItems.push_back(row);
     }
 
     loaded = true;
@@ -340,64 +520,87 @@ void MainWindow::on_tableWidget_currentCellChanged(int currentRow, int currentCo
     }
 }
 
-void MainWindow::on_tableWidget_cellClicked(int row, int column)
+void MainWindow::on_tableWidget_cellClicked(int row, int col)
 {
-    auto previousPoint = model.currentPoint;
-    if (model.getMode() == editing) {
+    std::cerr << "on_tableWidget_cellClicked\n";
 
-        for (size_t row = 0; row < 32; ++row) {
-            for (size_t col = 0; col < 16; ++col) {
-                if (matrixItems[row][col]->background() != traceColor) {
-                    continue;
-                }
-                if (model.startPoint.row == row && model.startPoint.col == col) {
-                    matrixItems[row][col]->setBackground(startColor);
-                    continue;
-                }
-                matrixItems[row][col]->setBackground(commandColor);
-            }
-        }
-
-
-        Point cur_point(row, column);
-        std::list<microcommand> microcommands_in_command = {};
-        size_t jumps = 0;
-        while (jumps < 64 && !mk.getRom().getMicrocommand(cur_point.row,cur_point.col).is_empty()) {
-            ++jumps;
-            matrixItems[cur_point.row][cur_point.col]->setBackground(traceColor);
-            auto cm = mk.getRom().getMicrocommand(cur_point.row, cur_point.col);
-            if (cm.LD) {
-                break;
-            }
-            if (cm.AC.to_string().starts_with("00")){
-                cur_point.row = (size_t)(cm.AC.to_ulong());
-                continue;
-            }
-            if (cm.AC.to_string().starts_with("010")){
-                cur_point.row = 0;
-                cur_point.col = (size_t)(cm.AC.to_ulong()) - 32;
-                continue;
-            }
-            if (cm.AC.to_string().starts_with("011")){
-                cur_point.col = (size_t)(cm.AC.to_ulong()) - 48;
-                continue;
-            }
-            if (cm.AC.to_string().starts_with("1110")){
-                cur_point.row = (size_t)(cm.AC.to_ulong()) - 112;
-                continue;
-            }
-        }
-
-        model.currentPoint = Point(row, column);
-        changeCurrentPoint(previousPoint, model.currentPoint);
-        if (previousPoint.isNull()) {
-            ui->tableWidget->setCurrentIndex(QModelIndex(ui->tableWidget->model()->index(row, column)));
-        }
-        configUIMode();
+    if (listingIsBeingChanged) {
+        return;
     }
+    listingIsBeingChanged = true;
+
+    if (model.getMode() != editing) {
+        listingIsBeingChanged = false;
+        return;
+    }
+
+    Point current_point(row, col);
+    auto current_command = mk.getRom().getMicrocommand(current_point.row, current_point.col);
+
+    for (size_t r = 0; r < 32; ++r) {
+        for (size_t c = 0; c < 16; ++c) {
+            if (r == model.startPoint.row && c == model.startPoint.col) {
+                romItems[r][c]->setBackground(startColor);
+                continue;
+            }
+            if (!mk.getRom().getMicrocommand(r, c).is_empty()) {
+                romItems[r][c]->setBackground(commandColor);
+            }
+        }
+    }
+
+    if (!current_point.isNull()) {
+        ui->tableWidget->setCurrentIndex(QModelIndex(ui->tableWidget->model()->index(current_point.row, current_point.col)));
+    }
+
+    const size_t max_jumps = 512; // 32 * 16
+    size_t jumps_counter = 0;
+    const bool clicked_is_empty = current_command.is_empty();
+
+    selected_commands_addresses.clear();
+    while (jumps_counter < max_jumps && !current_command.is_empty()) {
+        selected_commands_addresses.push_back({current_point.row, current_point.col});
+
+        if (jumps_counter++ == 1 && !clicked_is_empty) {
+            romItems[current_point.row][current_point.col]->setBackground(traceColor);
+        }
+
+        if (current_command.LD == true) { break; }
+        if (current_command.AC.to_string().starts_with("00")){
+            current_point.row = (size_t)(current_command.AC.to_ulong());
+        }
+        if (current_command.AC.to_string().starts_with("010")){
+            current_point.row = 0;
+            current_point.col = (size_t)(current_command.AC.to_ulong()) - 32;
+        }
+        if (current_command.AC.to_string().starts_with("011")){
+            current_point.col = (size_t)(current_command.AC.to_ulong()) - 48;
+        }
+        if (current_command.AC.to_string().starts_with("1110")){
+            current_point.row = (size_t)(current_command.AC.to_ulong()) - 112;
+        }
+        current_command = mk.getRom().getMicrocommand(current_point.row, current_point.col);
+    }
+
+    std::cerr << "Enumerated command list:\n";
+    for (auto clIt = selected_commands_addresses.cbegin(); clIt != selected_commands_addresses.cend(); ++clIt) {
+        std::cerr << clIt->first << "-" << clIt->second << "\n";
+    }
+
+    //model.currentPoint = current_point;
+    // changeCurrentPoint(previousPoint, model.currentPoint);
+
+    selectedCommandItems.clear();
+    ui->listingWidget->clear();
+    putSelectedListToSelectedItems();
+    displaySelectedCommandListing();
+
+    configUIMode();
+    listingIsBeingChanged = false; //
 }
 
 void MainWindow::fillInputs() {
+    std::cerr << "void MainWindow::fillInputs:\n";
     if (model.currentPoint.isNull()) {
         ui->boxCPE->setCurrentIndex(0);
         ui->boxFC1->setCurrentIndex(0);
@@ -532,19 +735,20 @@ void MainWindow::on_ramcLineEdit_textEdited(const QString &arg1)
     handleInputState();
 }
 
-void MainWindow::setItemColor(Point point) {
+void MainWindow::setItemColor(const Point& point) {
+    std::cerr << "void MainWindow::setItemColor:\n";
     if (point.isNull()) {
         return;
     }
-    microcommand command = mk.getRom().getMicrocommand(point.row, point.col);
-    auto item = matrixItems[point.row][point.col].get();
+    auto mc = mk.getRom().getMicrocommand(point.row, point.col);
+    auto item = romItems[point.row][point.col];
     // QTableWidgetItem* item = new QTableWidgetItem;
     if (model.getMode() == running) {
         if (point == model.currentPoint) {
             item->setBackground(currentRunningColor);
         } else if (point == model.startPoint) {
             item->setBackground(startColor);
-        } else if (command.is_empty()) {
+        } else if (mc.is_empty()) {
             item->setBackground(transparentColor);
         } else {
             item->setBackground(commandColor);
@@ -553,14 +757,14 @@ void MainWindow::setItemColor(Point point) {
     else {
         if (point == model.startPoint) {
             item->setBackground(startColor);
-        } else if (command.is_empty()) {
+        } else if (mc.is_empty()) {
             item->setBackground(transparentColor);
         } else {
-            item->setBackground(commandColor); // error from here
+            //item->setBackground(commandColor); // error from here
         }
     }
-    auto t = command.tag;
-    item->setText(t.c_str());
+    auto t = mc.tag;
+    item->setText(QString(t.c_str()));
     item->setForeground(QBrush(Qt::white));
 }
 
@@ -639,6 +843,8 @@ void MainWindow::on_save_file_as_triggered()
 
 void MainWindow::on_open_file_triggered()
 {
+    if (!loaded) { return; }
+    std::cerr << "void MainWindow::on_open_file_triggered:\n";
     loaded = false;
 
     std::string filename = QFileDialog::getOpenFileName(this, tr("Open project"),
@@ -654,6 +860,11 @@ void MainWindow::on_open_file_triggered()
     setupItems();
     fillInputs();
     model.current_filename = filename;
+
+    scanProgram();
+    putScannedProgramToItems();
+
+    on_tableWidget_cellClicked(model.startPoint.row, model.startPoint.col);
 
     loaded = true;
 }
@@ -673,21 +884,29 @@ void MainWindow::on_save_file_triggered()
 
 void MainWindow::on_open_command_mode_triggered()
 {
-
     CommandModeWindow* command_window = new CommandModeWindow();
     command_window->loaded=false;
+
+    command_window->mainWindow = this;
     command_window->mk = mk;
     command_window->model = model;
-    command_window->setupCommandPool();
+
+    // setupCommandPool();
+    // putScannedPoolToItems();
     command_window->displayCommandPool();
-    command_window->scanProgram();
-    command_window->displayProgram();
+
+    // command_window->scanProgram();
+    // command_window->putScannedProgramToItems();
+    command_window->displayScannedProgram();
+
     command_window->show();
+
     command_window->loaded=true;
     this->hide();
 }
 
 void MainWindow::setupItems() {
+    std::cerr << "void MainWindow::setupItems:\n";
     for (size_t row = 0; row < 32; ++row) {
         for (size_t col = 0; col < 16; ++col) {
             setItemColor(Point(row, col));
@@ -700,7 +919,7 @@ void MainWindow::on_tableWidget_cellChanged(int row, int column)
     if (!loaded) {
         return;
     }
-    std::string content = matrixItems[row][column]->text().toStdString();
+    std::string content = romItems[row][column]->text().toStdString();
     microcommand command = mk.rom.getMicrocommand(row, column);
     if (content == "") {
         command.is_command_entrypoint = false;

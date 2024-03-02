@@ -715,7 +715,7 @@
             "is_command_entrypoint": false
         },
         "10-10": {
-            "AC": "0100000",
+            "AC": "0101010",
             "CS": 0,
             "EA": 0,
             "ED": 0,
@@ -726,7 +726,7 @@
             "LD": 0,
             "RW": 0,
             "Tag": "",
-            "address_control": "0100000",
+            "address_control": "0101010",
             "command_code": 0,
             "empty": false,
             "index_F": 0,

@@ -21,7 +21,7 @@ struct Point {
 
     int col;
 
-    bool isNull() {
+    bool isNull() const {
         bool isNull = (row == -1) && (col == -1);
         return isNull;
     }
@@ -30,12 +30,21 @@ struct Point {
         return Point();
     }
 
-    friend bool operator== (Point &lhs, Point &rhs) {
-        return (lhs.row == rhs.row) && (lhs.col == rhs.col);
+
+    bool operator==(const Point& rhs) const {
+        return (row == rhs.row) && (col == rhs.col);
     }
 
-    friend bool operator!= (Point &lhs, Point &rhs) {
-        return (lhs.row != rhs.row) || (lhs.col != rhs.col);
+    // friend bool operator== (Point &lhs, Point &rhs) const {
+    //     return (lhs.row == rhs.row) && (lhs.col == rhs.col);
+    // }
+
+    // friend bool operator!= (Point &lhs, Point &rhs) const {
+    //     return (lhs.row != rhs.row) || (lhs.col != rhs.col);
+    // }
+
+    bool operator!=(const Point &rhs) const {
+        return !Point::operator==(rhs);
     }
 };
 

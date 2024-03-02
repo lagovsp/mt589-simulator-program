@@ -33,8 +33,12 @@ void ROM::write(size_t row, size_t col, microcommand cmd) {
     }
 }
 
-microcommand ROM::getMicrocommand(size_t row, size_t col) const {
+const microcommand& ROM::getMicrocommand(size_t row, size_t col) const {
     return memory[row][col];
+}
+
+const ROM& ROM::get() const {
+    return *this;
 }
 
 ROM& ROM::operator=(const ROM& rom) {
@@ -42,24 +46,10 @@ ROM& ROM::operator=(const ROM& rom) {
     if (this == &rom) {
         return *this;
     }
-    // std::vector<std::vector<microcommand>> memory;
-    // std::vector<std::pair<Code, Args>> program_as_commands_codes_and_args_order;
-
-    memory.clear();
-    memory.resize(rom.memory.size());
-    std::cerr<<"ROM::operator=:"<<std::endl;
-    for (size_t row = 0; row < 32; ++row) {
-        memory[row].resize(rom.memory[row].size());
-        for (size_t col = 0; col < 16; ++col) {
-            this->write(row, col, rom.memory[row][col]);
-        }
-    }
-
-    program_as_commands_codes_and_args_order.clear();
-    for (size_t i =0; i<rom.program_as_commands_codes_and_args_order.size(); ++i){
-        auto node = rom.program_as_commands_codes_and_args_order[i];
-        program_as_commands_codes_and_args_order.push_back({node.first, {node.second.first, node.second.second}});
-    }
+    memory = rom.memory;
+    program = rom.program;
+    addresses_args_pairs = rom.addresses_args_pairs;
+    return *this;
 }
 
 bool microcommand::is_empty() const{

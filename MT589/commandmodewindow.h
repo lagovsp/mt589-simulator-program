@@ -31,17 +31,17 @@ public:
 
     Model model;
 
-    std::shared_ptr<MainWindow> mainWindow = nullptr;
+    MainWindow* mainWindow = nullptr;
 
     void prepareISAWindowText();
 
-    void setupCommandPool();
-
+    // void setupCommandPool();
+    // void putScannedPoolToItems();
     void displayCommandPool();
 
-    void scanProgram();
-
-    void displayProgram();
+    // void scanProgram();
+    // void putScannedProgramToItems();
+    void displayScannedProgram();
 
 private slots:
     void on_open_rom_triggered();
@@ -93,9 +93,9 @@ private:
 
     CreateISA isaWindow;
 
-    std::vector<std::shared_ptr<QLCDNumber>> regLCDs = {};
+    std::vector<QLCDNumber*> regLCDs = {};
 
-    std::vector<std::shared_ptr<QTableWidgetItem>> items;
+    std::vector<QTableWidgetItem*> items;
 
     std::string toHex(unsigned int value);
 
@@ -132,20 +132,20 @@ private:
 
     std::string current_filename = "";
 
-//public:
+// public:
     //
-    using Code = size_t;
-    using Name = std::string;
-    using Address = std::pair<size_t, size_t>;
-    using Args = std::pair<size_t, size_t>;
-    using CalledCommand = std::pair<Code, Args>;
-    // Command: Code, X, Y, Tag
+    // using Code = size_t;
+    // using Name = std::string;
+    // using Address = std::pair<size_t, size_t>;
+    // using Args = std::pair<size_t, size_t>;
+    // using CalledCommand = std::pair<Code, Args>;
+    // // Command: Code, X, Y, Tag
 
-    std::map<Code, std::pair<Name, Address>> code_to_name_and_address = {};
-    std::list<CalledCommand> program = {};  // CalledCommand: Code, Arg1, Arg2
+    // std::map<Code, std::pair<Name, Address>> code_to_name_and_address = {};
+    // std::list<CalledCommand> program = {};  // CalledCommand: Code, Arg1, Arg2
 
-    std::vector<std::vector<std::shared_ptr<QTableWidgetItem>>> command_pool_widget_matrix = {};
-    std::list<std::vector<std::shared_ptr<QTableWidgetItem>>> command_list_widget_matrix = {};
+    // std::vector<std::vector<QTableWidgetItem*>> command_pool_widget_matrix = {};
+    // std::vector<std::vector<QTableWidgetItem*>> command_list_widget_matrix = {};
 };
 
 #endif // COMMANDMODEWINDOW_H

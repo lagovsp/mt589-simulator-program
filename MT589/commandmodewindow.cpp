@@ -10,153 +10,27 @@
 #include <unordered_set>
 
 
-void CommandModeWindow::scanProgram() {
-    program.clear();
+void CommandModeWindow::displayCommandPool() {
+    ui->commandPoolTableWidget->setHorizontalHeaderLabels({"Адрес", "Имя"});
+    ui->commandPoolTableWidget->horizontalHeader()->sectionResizeMode(QHeaderView::Fixed);
 
-    std::cerr << "SCANPR"<<mk.rom.program_as_commands_codes_and_args_order.size()<< std::endl;
-
-    for(const auto& entry: mk.rom.program_as_commands_codes_and_args_order) {
-        size_t code = entry.first;
-        uint16_t arg1 = entry.second.first;
-        uint16_t arg2 = entry.second.second;
-
-        // std::vector<std::shared_ptr<QTableWidgetItem>> program_command;
-
-        // QTableWidgetItem* item1 = new QTableWidgetItem();
-        // program_command.push_back(std::shared_ptr<QTableWidgetItem>(item1));
-        // std::stringstream ss1;
-        // ss1 << code;
-        // item1->setText(QString(ss1.str().c_str()));
-
-        // QTableWidgetItem* item2 = new QTableWidgetItem();
-        // program_command.push_back(std::shared_ptr<QTableWidgetItem>(item2));
-        // std::string name = code_to_name_and_address.at(code).first;
-        // item2->setText(QString(name.c_str()));
-
-        // QTableWidgetItem* item3 = new QTableWidgetItem();
-        // program_command.push_back(std::shared_ptr<QTableWidgetItem>(item3));
-        // std::stringstream ss2;
-        // ss2 << arg1;
-        // item3->setText(QString(ss2.str().c_str()));
-
-        // QTableWidgetItem* item4 = new QTableWidgetItem();
-        // program_command.push_back(std::shared_ptr<QTableWidgetItem>(item4));
-        // std::stringstream ss3;
-        // ss3 << arg2;
-        // item4->setText(QString(ss3.str().c_str()));
-
-        program.push_back({code, {arg1, arg2}});
+    auto &cpwm = mainWindow->command_pool_widget_matrix;
+    for (size_t i = 0; i < cpwm.size(); ++i) {
+        ui->commandPoolTableWidget->setItem(i, 0, cpwm[i][0]);
+        ui->commandPoolTableWidget->setItem(i, 1, cpwm[i][1]);
+        ui->commandPoolTableWidget->setItem(i, 2, cpwm[i][2]);
     }
 }
 
-void CommandModeWindow::displayProgram() {
+void CommandModeWindow::displayScannedProgram() {
     ui->programWidget->horizontalHeader()->sectionResizeMode(QHeaderView::Fixed);
 
-    size_t read_commands_counter = 0;
-    for (const auto& command_info: program) {
-        auto code = command_info.first;
-        auto arg1 = command_info.second.first;
-        auto arg2 = command_info.second.second;
-
-        std::vector<std::shared_ptr<QTableWidgetItem>> called_command;
-        QTableWidgetItem item = QTableWidgetItem();
-
-        std::stringstream ss1;
-        ss1 << code;
-        item.setText(QString(ss1.str().c_str()));
-        called_command.push_back(std::make_shared<QTableWidgetItem>(item));
-
-        std::string name = code_to_name_and_address.at(code).first; // at to code that disappears from the map ? why????
-        item.setText(QString(name.c_str()));
-        called_command.push_back(std::make_shared<QTableWidgetItem>(item));
-
-        std::stringstream ss2;
-        ss2 << arg1;
-        item.setText(QString(ss2.str().c_str()));
-        called_command.push_back(std::make_shared<QTableWidgetItem>(item));
-
-        std::stringstream ss3;
-        ss3 << arg2;
-        item.setText(QString(ss3.str().c_str()));
-        called_command.push_back(std::make_shared<QTableWidgetItem>(item));
-
-        command_list_widget_matrix.push_back(called_command);
-        ui->programWidget->setItem(read_commands_counter, 0, command_list_widget_matrix.back()[0].get());
-        ui->programWidget->setItem(read_commands_counter, 1, command_list_widget_matrix.back()[1].get());
-        ui->programWidget->setItem(read_commands_counter, 2, command_list_widget_matrix.back()[2].get());
-        ui->programWidget->setItem(read_commands_counter, 3, command_list_widget_matrix.back()[3].get());
-        ++read_commands_counter;
-    }
-}
-
-void CommandModeWindow::setupCommandPool() {
-    code_to_name_and_address.clear();
-    program.clear();
-    // std::vector<std::pair<Code, Args>> program_as_commands_codes_and_args_order;
-    size_t c= 0;
-    std::unordered_set<size_t> codes_set;
-    for (size_t col = 0; col < 16; ++col) {
-        for (size_t row = 0; row < 32; ++row) {
-            auto mc = mk.rom.memory[row][col];
-            if (mc.is_command_entrypoint == false) {
-                continue;
-            }
-            std::cerr<<"ccode: "<<mc.command_code<<std::endl;
-            ++c;
-            codes_set.insert(mc.command_code);
-            code_to_name_and_address.insert({mc.command_code, {mc.tag, {row, col}}});
-            // std::vector<std::shared_ptr<QTableWidgetItem>> command_description;
-            // QTableWidgetItem item = QTableWidgetItem();
-
-            // item.setText(("r" + std::to_string(row) + "-c" + std::to_string(col)).c_str());
-            // command_description.push_back(std::make_shared<QTableWidgetItem>(item));
-
-            // std::stringstream ss;
-            // ss << std::bitset<8>(mc.command_code);
-            // item.setText(ss.str().c_str());
-            // command_description.push_back(std::make_shared<QTableWidgetItem>(item));
-
-            // item.setText(mc.tag.c_str());
-            // command_description.push_back(std::make_shared<QTableWidgetItem>(item));
-
-            // command_pool.push_back(command_description);
-            // std::cerr<<std::to_string(mc.command_code)<<std::endl;
-            // code_to_name_and_address.insert({mc.command_code, {mc.tag, {row, col}}});
-        }
-    }
-    std::cerr <<"SETUPCOMPOOL"<< code_to_name_and_address.size()<<" ; c = "<<c<<"; set size = "<<codes_set.size()<< std::endl;
-}
-
-void CommandModeWindow::displayCommandPool() {
-    ui->commandPoolTableWidget->setHorizontalHeaderLabels({"Адрес вызова", "Код", "Имя"});
-    ui->commandPoolTableWidget->horizontalHeader()->sectionResizeMode(QHeaderView::Fixed);
-    size_t read_commands_counter = 0;
-
-    for (const auto& [code, value] : code_to_name_and_address) {
-        auto name = value.first;
-        auto row = value.second.first;
-        auto col = value.second.second;
-
-        std::vector<std::shared_ptr<QTableWidgetItem>> command_description;
-        QTableWidgetItem item = QTableWidgetItem();
-
-        item.setText(("r" + std::to_string(row) + "-c" + std::to_string(col)).c_str());
-        command_description.push_back(std::make_shared<QTableWidgetItem>(item));
-
-        std::stringstream ss;
-        ss << std::bitset<8>(code);
-        item.setText(ss.str().c_str());
-        command_description.push_back(std::make_shared<QTableWidgetItem>(item));
-
-        item.setText(name.c_str());
-        command_description.push_back(std::make_shared<QTableWidgetItem>(item));
-
-        command_pool_widget_matrix.push_back(command_description);
-
-        ui->commandPoolTableWidget->setItem(read_commands_counter, 0, command_pool_widget_matrix.back()[0].get());
-        ui->commandPoolTableWidget->setItem(read_commands_counter, 1, command_pool_widget_matrix.back()[1].get());
-        ui->commandPoolTableWidget->setItem(read_commands_counter, 2, command_pool_widget_matrix.back()[2].get());
-        ++read_commands_counter;
+    auto &clwm = mainWindow->command_list_widget_matrix;
+    for (size_t i = 0; i < mainWindow->command_list_widget_matrix.size(); ++i) {
+        ui->programWidget->setItem(i, 0, clwm[i][0]);
+        ui->programWidget->setItem(i, 1, clwm[i][1]);
+        ui->programWidget->setItem(i, 2, clwm[i][2]);
+        ui->programWidget->setItem(i, 3, clwm[i][3]);
     }
 }
 
@@ -199,9 +73,9 @@ CommandModeWindow::CommandModeWindow(QWidget *parent) :
 
     for (size_t i = 0; i < mk.ram.size; ++i) {
             QTableWidgetItem* item = new QTableWidgetItem();
-            items.push_back(std::shared_ptr<QTableWidgetItem>(item));
-            ui->programWidget->setItem(i, 0, item);
             item->setTextAlignment(Qt::AlignCenter);
+            items.push_back(item);
+            ui->programWidget->setItem(i, 0, item);
     }
     loaded = true;
     PC = mk.MEM;
@@ -245,16 +119,16 @@ void CommandModeWindow::on_open_triggered()
 }
 
 void CommandModeWindow::setupRegs() {
-   regLCDs.push_back(std::shared_ptr<QLCDNumber>(ui->reg0));
-   regLCDs.push_back(std::shared_ptr<QLCDNumber>(ui->reg1));
-   regLCDs.push_back(std::shared_ptr<QLCDNumber>(ui->reg2));
-   regLCDs.push_back(std::shared_ptr<QLCDNumber>(ui->reg3));
-   regLCDs.push_back(std::shared_ptr<QLCDNumber>(ui->reg4));
-   regLCDs.push_back(std::shared_ptr<QLCDNumber>(ui->reg5));
-   regLCDs.push_back(std::shared_ptr<QLCDNumber>(ui->reg6));
-   regLCDs.push_back(std::shared_ptr<QLCDNumber>(ui->reg7));
-   regLCDs.push_back(std::shared_ptr<QLCDNumber>(ui->reg8));
-   regLCDs.push_back(std::shared_ptr<QLCDNumber>(ui->reg9));
+   regLCDs.push_back(ui->reg0);
+   regLCDs.push_back(ui->reg1);
+   regLCDs.push_back(ui->reg2);
+   regLCDs.push_back(ui->reg3);
+   regLCDs.push_back(ui->reg4);
+   regLCDs.push_back(ui->reg5);
+   regLCDs.push_back(ui->reg6);
+   regLCDs.push_back(ui->reg7);
+   regLCDs.push_back(ui->reg8);
+   regLCDs.push_back(ui->reg9);
 }
 
 void CommandModeWindow::update_on_cpu_data() {
@@ -352,7 +226,7 @@ void CommandModeWindow::on_stepButton_clicked()
         if (command.CS == 0b1 and command.RW == 0b1 and mk.EA == 0b1 and mk.ED == 0b1) {
             // write
             mkwrite = true;
-            items[mk.A.value()]->setText(toHex(mk.D.value()).c_str());
+            items[mk.A.value()]->setText(toHex(mk.D.value()).c_str()); //
             mkwrite = false;
         }
         current_row = mk.get_row_adr();
@@ -634,22 +508,20 @@ void CommandModeWindow::on_save_rom_as_triggered()
 void CommandModeWindow::on_programWidget_cellClicked(int row, int column)
 {
     if (!loaded) { return; }
-    if (row >= mk.rom.program_as_commands_codes_and_args_order.size()) {
+    loaded = false;
+
+    if (row >= mk.rom.program.size()) {
+        loaded = true;
         return;
     }
 
-    auto node = mk.rom.program_as_commands_codes_and_args_order[row];
+    auto [rowSelected, columnSelected] = mk.rom.program[row];
+    auto [arg1, arg2] = mk.rom.addresses_args_pairs[rowSelected][columnSelected];
 
-    std::stringstream ss1;
-    ss1 << std::bitset<8>(node.first);
-    ui->codeBox->setText(QString(ss1.str().c_str()));
+    ui->codeBox->setText(QString((std::to_string(rowSelected) + "-" + std::to_string(columnSelected)).c_str()));
+    ui->op1Box->setText(QString((std::to_string(arg1)).c_str()));
+    ui->op2Box->setText(QString((std::to_string(arg2)).c_str()));
 
-    std::stringstream ss2;
-    ss2 << node.second.first;
-    ui->op1Box->setText(QString(ss2.str().c_str()));
-
-    std::stringstream ss3;
-    ss2 << node.second.second;
-    ui->op2Box->setText(QString(ss3.str().c_str()));
+    loaded=true;
 }
 

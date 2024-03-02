@@ -20,11 +20,11 @@ ROMWindow::ROMWindow(QWidget *parent) :
     ui->tableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
 
     for (size_t i = 0; i < 32; ++i) {
-        std::vector<std::shared_ptr<QTableWidgetItem>> row;
+        std::vector<QTableWidgetItem*> row;
         for (size_t j = 0; j < 16; ++j) {
-            QTableWidgetItem item;
-            row.push_back(std::make_shared<QTableWidgetItem>(item));
-            ui->tableWidget->setItem(i, j, row.back().get());
+            auto itemPtr = new QTableWidgetItem;
+            row.push_back(itemPtr);
+            ui->tableWidget->setItem(i, j, itemPtr);
         }
         items.push_back(row);
     }
