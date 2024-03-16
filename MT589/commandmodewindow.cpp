@@ -253,28 +253,28 @@ void CommandModeWindow::showCurrentMicroListing() {
         ++jumps_counter;
 
         if (current_command.LD == true) { break; }
-        if (current_command.AC.to_string().starts_with("00")){
+        if (current_command.AC.to_string().starts_with("00")) {
             current_point.row = (size_t)(current_command.AC.to_ulong());
         }
-        if (current_command.AC.to_string().starts_with("010")){
+        if (current_command.AC.to_string().starts_with("010")) {
             current_point.row = 0;
             current_point.col = (size_t)(current_command.AC.to_ulong()) - 32;
         }
-        if (current_command.AC.to_string().starts_with("011")){
+        if (current_command.AC.to_string().starts_with("011")) {
             current_point.col = (size_t)(current_command.AC.to_ulong()) - 48;
         }
-        if (current_command.AC.to_string().starts_with("1110")){
+        if (current_command.AC.to_string().starts_with("1110")) {
             current_point.row = (size_t)(current_command.AC.to_ulong()) - 112;
         }
         current_command = mk.getRom().getMicrocommand(current_point.row, current_point.col);
     }
 
     QStringList labels = {"Адрес", "Имя", "F", "K", "I", "AC"};
-    ui->currentCommandWidget->setRowCount(selected_command_microcommands.size());
-    ui->currentCommandWidget->setColumnCount(labels.size());
-    ui->currentCommandWidget->setHorizontalHeaderLabels(labels);
-    ui->currentCommandWidget->horizontalHeader()->sectionResizeMode(QHeaderView::Fixed);
-    ui->currentCommandWidget->setSelectionMode(QAbstractItemView::NoSelection);
+    ui->currentCommandMicroListingWidget->setRowCount(selected_command_microcommands.size());
+    ui->currentCommandMicroListingWidget->setColumnCount(labels.size());
+    ui->currentCommandMicroListingWidget->setHorizontalHeaderLabels(labels);
+    ui->currentCommandMicroListingWidget->horizontalHeader()->sectionResizeMode(QHeaderView::Fixed);
+    ui->currentCommandMicroListingWidget->setSelectionMode(QAbstractItemView::NoSelection);
 
     for (size_t it = 0; it < selected_command_microcommands.size(); ++it) {
         std::vector<QTableWidgetItem*> vectorRow;
@@ -323,51 +323,59 @@ void CommandModeWindow::on_stepButton_clicked()
     if (!loaded) { return; }
     loaded = false;
 
+    if (mk.rom.program.empty()) {
+        return;
+    }
 
-    // if (mk.rom.program.empty()){
-    //     return;
-    // }
+    auto curPoint = model.currentPoint;
 
-    // if (mk.getRom().getMicrocommand(row, column).LD) {
-    //     cur_microcommand_in_cur_command = 0;
-    //     if (cur_command_number == mk.rom.program.size()) {
-    //         cur_command_number = 0;
-    //         on_resetButton_clicked();
-    //     } else {
-    //         ++cur_command_number;
-    //     }
-    // }
-    // // bool is_loadmem_prog_running = true;
-    // WORD oldRow = *PC;
+    displayTrackerCommands(cur_command_number);
+    undisplayTrackerMicroCommand(cur_microcommand_in_cur_command);
 
-    // displayTrackerCommands(cur_command_number);
-    // undisplayTrackerMicroCommand(cur_microcommand_in_cur_command);
-
-    // bool filler = false;
+    bool filler = false;
     // size_t r = mk.get_row_adr();
     // size_t c = mk.get_col_adr();
     // auto command_address = Point(r, c);
-    // auto [row, column] = with_command_execute_microcommand(command_address.row, command_address.col, filler);
-    // ++cur_microcommand_in_cur_command;
+    auto [row, column] = with_command_execute_microcommand(curPoint.row, curPoint.col, filler);
+    ++cur_microcommand_in_cur_command;
 
-    // ++cur_command_number;
-    // displayTrackerMicroCommand(cur_microcommand_in_cur_command);
+    if (mk.getRom().getMicrocommand(curPoint.row, curPoint.col).LD) { // body is right
+        cur_microcommand_in_cur_command = 0;
+        if (cur_command_number == mk.rom.program.size() - 1) {
+            on_resetButton_clicked();
+            cur_command_number = 0;
+            return;
+        } else {
+            ++cur_command_number;
+            std::cerr<<"will be next command:";
+            auto nextCommand = mk.getRom().program[cur_command_number];
+            model.currentPoint = Point(nextCommand.first, nextCommand.second);
+            std::cerr<<model.currentPoint.row<<"-"<<model.currentPoint.col<<"\n";
+
+            mk.mcu.MA = mainWindow->convertPointToBitset(Point(model.currentPoint.row, model.currentPoint.col));
+            mk.mcu.MPAR = mainWindow->convertPointToBitset(Point(model.currentPoint.row, model.currentPoint.col)); // ?
+        }
+    }
+
+    displayTrackerMicroCommand(cur_microcommand_in_cur_command);
 
     loaded = true;
 }
 
 std::pair<size_t, size_t> CommandModeWindow::with_command_execute_microcommand(size_t row, size_t col, bool& fin) {
-    if (model.getMode() == editing) {
-        model.setMode(running);
+    std::cerr << "std::pair<size_t, size_t> CommandModeWindow::with_command_execute_microcommand:"<<row<<"-"<<col<<"\n";
+    std::cerr << (model.getMode() == Mode::editing ? "editing" : "running") << "\n";
+
+    if (model.currentPoint.isNull()) {
+        model.currentPoint = model.startPoint;
     }
 
-    auto current_point = Point(row, col);
-    microcommand command = mk.rom.getMicrocommand(current_point.row, current_point.col);
-    std::string ac = command.AC.to_string();
+    Point currentPoint = model.currentPoint;
+    auto command = mk.rom.getMicrocommand(currentPoint.row, currentPoint.col);
 
     if (command.CS == 0b1 and command.RW == 0b0 and command.EA == 0b1) {
         // read
-        command.M = mk.ram.read(mk.MAR);
+        command.M = mk.ram.read(mk.MAR); // microprogram address register
     } else {
         command.M = 0x00;
     }
@@ -375,16 +383,24 @@ std::pair<size_t, size_t> CommandModeWindow::with_command_execute_microcommand(s
     mk.do_fetch_decode_execute_cycle(command);
     if (command.CS == 0b1 and command.RW == 0b1 and mk.ED == 0b1 and mk.EA == 0b1) {
         // write
-        mainWindow->ramItems[mk.A.value()]->setText(std::to_string(mk.D.value()).c_str());
+        // ramItems[mk.A.value()]->setText(std::to_string(mk.D.value()).c_str());
     }
     auto nextPoint = Point(mk.get_row_adr(), mk.get_col_adr());
 
     model.currentPoint = nextPoint;
+    std::cerr << "new point: " << model.currentPoint.row << "-" << model.currentPoint.col << "\n";
+
+    // configUIMode();
+    // changeCurrentPoint(currentPoint, nextPoint);
+    update_on_cpu_data();
+
+    model.currentPoint = nextPoint;
 
     //configUIMode();
-    mainWindow->changeCurrentPoint(current_point, nextPoint);
-    update_on_cpu_data();
+    // mainWindow->changeCurrentPoint(current_point, nextPoint);
+    // update_on_cpu_data();
     fin = command.LD;
+    return std::make_pair(nextPoint.row, nextPoint.col);
 }
 void CommandModeWindow::on_runButton_clicked()
 {

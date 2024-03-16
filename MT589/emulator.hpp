@@ -35,6 +35,8 @@ public:
     //====================MEMORY
     WORD MEM[0xC];
     WORD MAR;
+
+    // void setAddr(int r, int c);
 private:
     size_t cpe_amount = 8;
     //====================CPE

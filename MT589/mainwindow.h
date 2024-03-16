@@ -83,9 +83,9 @@ public:
 
     Model model = Model();
 
-private slots:
+public slots:
     void on_stepButton_clicked();
-
+private slots:
     void on_runButton_clicked();
 
     void on_boxCPE_currentIndexChanged(int index);

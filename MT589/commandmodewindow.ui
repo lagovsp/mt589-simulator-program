@@ -11171,7 +11171,7 @@
      <enum>Qt::MarkdownText</enum>
     </property>
    </widget>
-   <widget class="QTableWidget" name="currentCommandWidget">
+   <widget class="QTableWidget" name="currentCommandMicroListingWidget">
     <property name="geometry">
      <rect>
       <x>750</x>

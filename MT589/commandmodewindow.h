@@ -27,9 +27,12 @@ public:
 
     bool loaded = false;
 
+    // heart
     MK589 mk;
-
     Model model;
+
+    int row = 0;
+    int column = 0;
 
     int cur_command_number = 0;
     int cur_microcommand_in_cur_command = 0;
@@ -160,6 +163,8 @@ public:
     // std::vector<std::vector<QTableWidgetItem*>> command_pool_widget_matrix = {};
     std::vector<MainWindow::Address> selected_command_microcommands = {};
     std::vector<std::vector<QTableWidgetItem*>> command_list_widget_matrix = {};
+
+    // std::vector<std::vector<QTableWidgetItem*>> currentCommandWidget
 };
 
 #endif // COMMANDMODEWINDOW_H

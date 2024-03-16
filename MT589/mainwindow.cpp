@@ -873,6 +873,10 @@ void MainWindow::on_resetButton_clicked()
     // model.currentPoint = Point::nullPoint();
     model.currentPoint = model.startPoint;
     mk.reset();
+    mk.mcu.MPAR = convertPointToBitset(model.currentPoint);
+    model.setMode(Mode::editing);
+    std::cerr << (model.getMode() == Mode::editing ? "editing" : "running") << "\n";
+
 }
 
 
@@ -943,16 +947,26 @@ void MainWindow::on_open_command_mode_triggered()
     putScannedPoolToItems();
     command_window->displayCommandPool();
 
-    // command_window->scanProgram();
+    command_window->cur_command_number = 0;
+    command_window->cur_microcommand_in_cur_command = 0;
+
+    if (mk.getRom().program.size() == 0) {
+        command_window->row = 0;
+        command_window->column = 0;
+    } else {
+        auto command = mk.getRom().program[0];
+        command_window->model.currentPoint = Point(command.first, command.second);
+    }
+
     // command_window->putScannedProgramToItems();
     command_window->displayScannedProgram();
     command_window->displayTrackerCommands(command_window->cur_command_number);
 
-    // command_window->showCurrentMicroListing();
+    command_window->showCurrentMicroListing();
     command_window->show();
 
 
-    command_window->loaded=true;
+    command_window->loaded = true;
     this->hide();
 }
 

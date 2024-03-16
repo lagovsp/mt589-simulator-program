@@ -127,6 +127,11 @@ void MK589::decode_adr() {
     std::cerr << row_adr << "-" << col_adr << "\n";
 }
 
+// void MK589::setAddr(int r, int c) {
+    // row_adr = r;
+    // col_adr = c;
+// }
+
 size_t MK589::get_row_adr() {
     return row_adr;
 }
