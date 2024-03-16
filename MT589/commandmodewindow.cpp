@@ -190,29 +190,132 @@ void CommandModeWindow::on_resetButton_clicked()
 {
     if (!loaded) { return; }
     loaded = false;
-    WORD oldRow = *PC;
+    //WORD oldRow = *PC;
     mk.reset();
-    mk.load(0b10100000);
-    update_on_cpu_data();
+    //mk.load(0b10100000);
+    //update_on_cpu_data();
 
-    changeCurrentRow(oldRow, *PC);
+    // changeCurrentRow(oldRow, *PC);
+    cur_command_number = 0;
+    cur_microcommand_in_cur_command = 0;
     loaded = true;
 }
 
-void CommandModeWindow::displayTracker(int cit_old, int cit_new) {
-    if (cit_old >= 0) {
-        mainWindow->command_list_widget_matrix[cit_old][0]->setBackground(mainWindow->transparentColor);
-        mainWindow->command_list_widget_matrix[cit_old][1]->setBackground(mainWindow->transparentColor);
-        mainWindow->command_list_widget_matrix[cit_old][2]->setBackground(mainWindow->transparentColor);
-        mainWindow->command_list_widget_matrix[cit_old][3]->setBackground(mainWindow->transparentColor);
-    }
-    if (cit_new >= mk.rom.program.size()) {
+void CommandModeWindow::displayTrackerCommands(int cit) {
+    if (cit >= mk.rom.program.size()) {
         return;
     }
-    mainWindow->command_list_widget_matrix[cit_new][0]->setBackground(mainWindow->currentRunningColor);
-    mainWindow->command_list_widget_matrix[cit_new][1]->setBackground(mainWindow->currentRunningColor);
-    mainWindow->command_list_widget_matrix[cit_new][2]->setBackground(mainWindow->currentRunningColor);
-    mainWindow->command_list_widget_matrix[cit_new][3]->setBackground(mainWindow->currentRunningColor);
+    mainWindow->command_list_widget_matrix[cit][0]->setBackground(mainWindow->currentRunningColor);
+    mainWindow->command_list_widget_matrix[cit][1]->setBackground(mainWindow->currentRunningColor);
+    mainWindow->command_list_widget_matrix[cit][2]->setBackground(mainWindow->currentRunningColor);
+    mainWindow->command_list_widget_matrix[cit][3]->setBackground(mainWindow->currentRunningColor);
+}
+
+void CommandModeWindow::undisplayTrackerCommands(int cit) {
+    if (cit >= mk.rom.program.size()) {
+        return;
+    }
+    mainWindow->command_list_widget_matrix[cit][0]->setBackground(mainWindow->transparentColor);
+    mainWindow->command_list_widget_matrix[cit][1]->setBackground(mainWindow->transparentColor);
+    mainWindow->command_list_widget_matrix[cit][2]->setBackground(mainWindow->transparentColor);
+    mainWindow->command_list_widget_matrix[cit][3]->setBackground(mainWindow->transparentColor);
+}
+
+void CommandModeWindow::undisplayTrackerMicroCommand(int mcit) {
+    command_list_widget_matrix[mcit][0]->setBackground(mainWindow->transparentColor);
+    command_list_widget_matrix[mcit][1]->setBackground(mainWindow->transparentColor);
+    command_list_widget_matrix[mcit][2]->setBackground(mainWindow->transparentColor);
+    command_list_widget_matrix[mcit][3]->setBackground(mainWindow->transparentColor);
+    command_list_widget_matrix[mcit][4]->setBackground(mainWindow->transparentColor);
+}
+
+void CommandModeWindow::displayTrackerMicroCommand(int mcit) {
+    command_list_widget_matrix[mcit][0]->setBackground(mainWindow->currentRunningColor);
+    command_list_widget_matrix[mcit][1]->setBackground(mainWindow->currentRunningColor);
+    command_list_widget_matrix[mcit][2]->setBackground(mainWindow->currentRunningColor);
+    command_list_widget_matrix[mcit][3]->setBackground(mainWindow->currentRunningColor);
+    command_list_widget_matrix[mcit][4]->setBackground(mainWindow->currentRunningColor);
+}
+
+void CommandModeWindow::showCurrentMicroListing() {
+    auto current_point = Point(mk.rom.program[cur_command_number].first, mk.rom.program[cur_command_number].second);
+    // auto previousPoint = current_point;
+    auto current_command = mk.getRom().getMicrocommand(current_point.row, current_point.col);
+
+    const size_t max_jumps = 512; // 32 * 16
+    size_t jumps_counter = 0;
+    const bool clicked_is_empty = current_command.is_empty();
+
+    selected_command_microcommands.clear();
+    while (jumps_counter < max_jumps && !current_command.is_empty()) {
+        selected_command_microcommands.push_back({current_point.row, current_point.col});
+
+        ++jumps_counter;
+
+        if (current_command.LD == true) { break; }
+        if (current_command.AC.to_string().starts_with("00")){
+            current_point.row = (size_t)(current_command.AC.to_ulong());
+        }
+        if (current_command.AC.to_string().starts_with("010")){
+            current_point.row = 0;
+            current_point.col = (size_t)(current_command.AC.to_ulong()) - 32;
+        }
+        if (current_command.AC.to_string().starts_with("011")){
+            current_point.col = (size_t)(current_command.AC.to_ulong()) - 48;
+        }
+        if (current_command.AC.to_string().starts_with("1110")){
+            current_point.row = (size_t)(current_command.AC.to_ulong()) - 112;
+        }
+        current_command = mk.getRom().getMicrocommand(current_point.row, current_point.col);
+    }
+
+    QStringList labels = {"Адрес", "Имя", "F", "K", "I", "AC"};
+    ui->currentCommandWidget->setRowCount(selected_command_microcommands.size());
+    ui->currentCommandWidget->setColumnCount(labels.size());
+    ui->currentCommandWidget->setHorizontalHeaderLabels(labels);
+    ui->currentCommandWidget->horizontalHeader()->sectionResizeMode(QHeaderView::Fixed);
+    ui->currentCommandWidget->setSelectionMode(QAbstractItemView::NoSelection);
+
+    for (size_t it = 0; it < selected_command_microcommands.size(); ++it) {
+        std::vector<QTableWidgetItem*> vectorRow;
+
+        auto [row, column] = selected_command_microcommands[it];
+        auto mc = mk.getRom().getMicrocommand(row, column);
+
+        std::cerr << "row " << row << " col " << column << " tag " << mc.tag << " F" << mc.F << " K" << mc.K << " I" << mc.I << " AC" << mc.AC << "\n";
+
+        QString data1 = QString::number(row) + "-" + QString::number(column);
+        auto itemPtr = new QTableWidgetItem(data1);
+        itemPtr->setTextAlignment(Qt::AlignCenter);
+        vectorRow.push_back(itemPtr);
+
+        QString data2 = QString::fromStdString(mc.tag);
+        itemPtr = new QTableWidgetItem(data2);
+        itemPtr->setTextAlignment(Qt::AlignCenter);
+        vectorRow.push_back(itemPtr);
+
+        QString data3 = QString::fromStdString(mc.F.to_string());
+        itemPtr = new QTableWidgetItem(data3);
+        itemPtr->setTextAlignment(Qt::AlignCenter);
+        vectorRow.push_back(itemPtr);
+
+        itemPtr = new QTableWidgetItem;
+        itemPtr->setText(QString(toHex(mc.K).c_str()));
+        itemPtr->setTextAlignment(Qt::AlignCenter);
+        vectorRow.push_back(itemPtr);
+
+        itemPtr = new QTableWidgetItem;
+        itemPtr->setText(QString(toHex(mc.I).c_str()));
+        itemPtr->setTextAlignment(Qt::AlignCenter);
+        vectorRow.push_back(itemPtr);
+
+        itemPtr = new QTableWidgetItem;
+        itemPtr->setText(QString(mc.AC.to_string().c_str()));
+        itemPtr->setTextAlignment(Qt::AlignCenter);
+        vectorRow.push_back(itemPtr);
+
+        command_list_widget_matrix.push_back(vectorRow);
+    }
 }
 
 void CommandModeWindow::on_stepButton_clicked()
@@ -220,68 +323,36 @@ void CommandModeWindow::on_stepButton_clicked()
     if (!loaded) { return; }
     loaded = false;
 
-    // bool is_loadmem_prog_running = true;
-    WORD oldRow = *PC;
-    // while (is_loadmem_prog_running) {
-    //     size_t r = mk.get_row_adr();
-    //     size_t c = mk.get_col_adr();
-    //     auto command = mk.rom.getMicrocommand(r, c);
-    //     if (command.is_empty()) { return; }
-    //     if (command.CS == 0b1 and command.RW == 0b0 and command.EA == 0b1) {
-    //         // read
-    //         command.M = mk.ram.read(mk.MAR);
-    //     } else {
-    //         command.M = 0x00;
-    //     }
 
-    //     if (command.LD == 0b1) {
-    //         is_loadmem_prog_running = false;
-    //     }
-    //     mk.do_fetch_decode_execute_cycle(command);
-//        if (command.CS == 0b1 and command.RW == 0b1 and mk.EA == 0b1 and mk.ED == 0b1) {
-//            // write
-//            items[mk.A.value()]->setText(toHex(mk.D.value()).c_str());
-//        }
+    // if (mk.rom.program.empty()){
+    //     return;
     // }
-    // size_t current_row = mk.get_row_adr();
-    // size_t current_col = mk.get_col_adr();
 
-    // while (current_row != 0 && current_col != 10) {
-    //     auto command = mk.rom.getMicrocommand(current_row, current_col);
-    //     if (command.is_empty()) { break; }
-    //     if (command.CS == 0b1 and command.RW == 0b0 and command.EA == 0b1) {
-    //         // read
-    //         command.M = mk.ram.read(mk.MAR);
+    // if (mk.getRom().getMicrocommand(row, column).LD) {
+    //     cur_microcommand_in_cur_command = 0;
+    //     if (cur_command_number == mk.rom.program.size()) {
+    //         cur_command_number = 0;
+    //         on_resetButton_clicked();
     //     } else {
-    //         command.M = 0x00;
+    //         ++cur_command_number;
     //     }
-    //     mk.do_fetch_decode_execute_cycle(command);
-    //     if (command.CS == 0b1 and command.RW == 0b1 and mk.EA == 0b1 and mk.ED == 0b1) {
-    //         // write
-    //         mkwrite = true;
-    //         items[mk.A.value()]->setText(toHex(mk.D.value()).c_str()); //
-    //         mkwrite = false;
-    //     }
-    //     current_row = mk.get_row_adr();
-    //     current_col = mk.get_col_adr();
     // }
-    // WORD newRow = *PC;
-    // changeCurrentRow(oldRow, newRow);
-    // update_on_cpu_data();
+    // // bool is_loadmem_prog_running = true;
+    // WORD oldRow = *PC;
 
-    displayTracker(cur_command_number-1, cur_command_number);
-    bool fin_flag = false;
-    while (fin_flag) {
-        size_t r = mk.get_row_adr();
-        size_t c = mk.get_col_adr();
-        auto command_address = Point(r, c);
-        while (true) {
-            auto [row, column] = with_command_execute_microcommand(command_address.row, command_address.col, fin_flag);
-            command_address.row = row;
-            command_address.col = column;
-        }
-    }
-    ++cur_command_number;
+    // displayTrackerCommands(cur_command_number);
+    // undisplayTrackerMicroCommand(cur_microcommand_in_cur_command);
+
+    // bool filler = false;
+    // size_t r = mk.get_row_adr();
+    // size_t c = mk.get_col_adr();
+    // auto command_address = Point(r, c);
+    // auto [row, column] = with_command_execute_microcommand(command_address.row, command_address.col, filler);
+    // ++cur_microcommand_in_cur_command;
+
+    // ++cur_command_number;
+    // displayTrackerMicroCommand(cur_microcommand_in_cur_command);
+
     loaded = true;
 }
 

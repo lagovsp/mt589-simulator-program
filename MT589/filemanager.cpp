@@ -104,7 +104,7 @@ fm::programm_data fm::get_data(const std::string& filename) {
 
     if (data.contains("program")) {
         json commands_infos = data["program"];
-        for (auto it = commands_infos.cbegin(); it != commands_infos.cend(); ++it) {
+        for (auto it = commands_infos.begin(); it != commands_infos.end(); ++it) {
             // auto command_code = (*it)["command_code"].get<size_t>();
             size_t row = (*it)["address"]["row"].get<size_t>();
             size_t column = (*it)["address"]["column"].get<size_t>();
@@ -132,7 +132,7 @@ fm::programm_data fm::get_data(const std::string& filename) {
     return prog_data;
 }
 
-void fm::save(const std::string& filename, MK589& mk, int startCol, int startRow) {
+void fm::save(const std::string& filename, MK589& mk, int startRow, int startCol) {
     json data;
     data["start"] = { { "row", startRow }, { "col", startCol }};
     data["matrix"] =  {};
@@ -183,6 +183,7 @@ void fm::save(const std::string& filename, MK589& mk, int startCol, int startRow
         commands_array.push_back(command);
     }
     data["program"] = commands_array;
+    data["mode"] = "microcommand"; // for back-connectivity
     fm::write_to_file(filename, data);
 }
 

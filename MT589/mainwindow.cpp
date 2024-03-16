@@ -270,21 +270,42 @@ void MainWindow::setupRAM() {
     }
 }
 
+std::bitset<9> MainWindow::convertPointToBitset(Point p) {
+    std::cerr<<"std::bitset<9> convertPointToBitset:\n";
+    std::cerr<<"point:"<<p.row<<"-"<<p.col<<"\n";
+    std::bitset<9> bs(p.row);
+    bs = bs << 4;
+    std::bitset<9> bs2(p.col);
+    bs = bs | bs2;
+    std::cerr<<"bs:"<<bs.to_string()<<"\n";
+    return bs;
+}
+
 void MainWindow::on_stepButton_clicked()
 {
+    if (!loaded) {
+        return;
+    }
+
+    std::cerr << "void MainWindow::on_stepButton_clicked:\n";
+    std::cerr << (model.getMode() == Mode::editing ? "editing" : "running") << "\n";
     if (model.getMode() == editing) {
+        // std::cerr << "startPoint:" << model.startPoint.row << "-" << model.startPoint.col<<"\n";
+        // std::cerr << "INFO: model.currentPoint = model.startPoint;\n";
+        // model.currentPoint = model.startPoint;
         setMode(running);
     }
     if (model.currentPoint.isNull()) {
         model.currentPoint = model.startPoint;
     }
+
     Point currentPoint = model.currentPoint;
     microcommand command = mk.rom.getMicrocommand(currentPoint.row, currentPoint.col);
-    std::string ac = command.AC.to_string();
+    // std::string ac = command.AC.to_string();
 
     if (command.CS == 0b1 and command.RW == 0b0 and command.EA == 0b1) {
         // read
-        command.M = mk.ram.read(mk.MAR);
+        command.M = mk.ram.read(mk.MAR); // microprogram address register
     } else {
         command.M = 0x00;
     }
@@ -297,10 +318,13 @@ void MainWindow::on_stepButton_clicked()
     Point nextPoint = Point(mk.get_row_adr(), mk.get_col_adr());
 
     model.currentPoint = nextPoint;
+    std::cerr << "new point: " << model.currentPoint.row << "-" << model.currentPoint.col << "\n";
 
     configUIMode();
     changeCurrentPoint(currentPoint, nextPoint);
     update_on_cpu_data();
+
+    loaded = true; // suka mb ubrat nado
 }
 
 void MainWindow::on_runButton_clicked()
@@ -551,6 +575,7 @@ void MainWindow::on_tableWidget_cellClicked(int row, int col)
     Point current_point(row, col);
     auto previousPoint = current_point;
     auto current_command = mk.getRom().getMicrocommand(current_point.row, current_point.col);
+    model.currentPoint = current_point;
 
     for (size_t r = 0; r < 32; ++r) {
         for (size_t c = 0; c < 16; ++c) {
@@ -602,7 +627,7 @@ void MainWindow::on_tableWidget_cellClicked(int row, int col)
         std::cerr << clIt->first << "-" << clIt->second << "\n";
     }
 
-    model.currentPoint = current_point;
+    // model.currentPoint = current_point;
     changeCurrentPoint(previousPoint, model.currentPoint);
 
     selectedCommandItems.clear();
@@ -738,6 +763,7 @@ void MainWindow::on_loadButton_clicked()
     std::bitset<8> addr = std::bitset<8>(ui->startAddressEdit->text().toStdString());
     mk.load(addr); // fix load (with X connection, not x from argument);
     auto currentStartPoint = model.startPoint;
+    std::cerr << "model.startPoint: " << model.startPoint.row << "-" << model.startPoint.col << std::endl;
     auto newStartPoint = Point(mk.get_row_adr(), mk.get_col_adr());
     model.startPoint = newStartPoint;
     setItemColor(currentStartPoint);
@@ -758,7 +784,7 @@ void MainWindow::setItemColor(const Point& point) {
     auto mc = mk.getRom().getMicrocommand(point.row, point.col);
     auto item = romItems[point.row][point.col];
     // QTableWidgetItem* item = new QTableWidgetItem;
-    if (model.getMode() == running) {
+    if (model.getMode() == running) { // must be running
         if (point == model.currentPoint) {
             item->setBackground(currentRunningColor);
         } else if (point == model.startPoint) {
@@ -775,7 +801,7 @@ void MainWindow::setItemColor(const Point& point) {
         } else if (mc.is_empty()) {
             item->setBackground(transparentColor);
         } else {
-            //item->setBackground(commandColor); // error from here
+            item->setBackground(commandColor); // error was from here
         }
     }
     auto t = mc.tag;
@@ -816,6 +842,8 @@ void MainWindow::on_endButton_clicked()
 }
 
 void MainWindow::setMode(Mode mode) {
+    std::cerr << "void MainWindow::setMode:";
+    std::cerr << (mode == Mode::editing ? "editing" : "running") << "\n";
     auto currentPoint = model.currentPoint;
     model.setMode(mode);
     ui->tableWidget->clearSelection();
@@ -842,7 +870,8 @@ void MainWindow::on_ramWidget_cellChanged(int row, int column)
 void MainWindow::on_resetButton_clicked()
 {
     on_endButton_clicked();
-    model.currentPoint = Point::nullPoint();
+    // model.currentPoint = Point::nullPoint();
+    model.currentPoint = model.startPoint;
     mk.reset();
 }
 
@@ -858,8 +887,8 @@ void MainWindow::on_save_file_as_triggered()
 
 void MainWindow::on_open_file_triggered()
 {
-    if (!loaded) { return; }
     std::cerr << "void MainWindow::on_open_file_triggered:\n";
+    if (!loaded) { return; }
     loaded = false;
 
     std::string filename = QFileDialog::getOpenFileName(this, tr("Open project"),
@@ -870,6 +899,7 @@ void MainWindow::on_open_file_triggered()
     fm::programm_data data = fm::get_data(filename);
 
     model.startPoint = Point(data.start_row, data.start_col);
+    std::cerr << "model.startPoint: " << model.startPoint.row << "-" << model.startPoint.col << std::endl;
     setItemColor(model.startPoint);
     mk = data.mk;
     setupItems();
@@ -881,6 +911,9 @@ void MainWindow::on_open_file_triggered()
 
     on_tableWidget_cellClicked(model.startPoint.row, model.startPoint.col);
 
+    // Point po = model.startPoint;
+    mk.mcu.MA = convertPointToBitset(Point(model.startPoint.row,model.startPoint.col));
+    mk.mcu.MPAR = convertPointToBitset(Point(model.startPoint.row,model.startPoint.col)); // ?
     loaded = true;
 }
 
@@ -913,8 +946,11 @@ void MainWindow::on_open_command_mode_triggered()
     // command_window->scanProgram();
     // command_window->putScannedProgramToItems();
     command_window->displayScannedProgram();
+    command_window->displayTrackerCommands(command_window->cur_command_number);
 
+    // command_window->showCurrentMicroListing();
     command_window->show();
+
 
     command_window->loaded=true;
     this->hide();

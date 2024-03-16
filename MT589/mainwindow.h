@@ -77,6 +77,8 @@ public:
     void putScannedProgramToItems();
     void displayScannedProgram();
 
+
+    std::bitset<9> convertPointToBitset(Point p);
     MK589 mk;
 
     Model model = Model();
@@ -163,7 +165,7 @@ public:
     // Model model = Model();
     QBrush commandColor = QBrush(Qt::blue);
     QBrush startColor = QBrush(Qt::green);
-    QBrush traceColor = QBrush(Qt::cyan);
+    QBrush traceColor = QBrush(Qt::darkMagenta);
     QBrush transparentColor = QBrush(Qt::transparent);
 
     QBrush currentRunningColor = QBrush(Qt::red); // run mode

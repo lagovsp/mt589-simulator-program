@@ -74,6 +74,10 @@ const ROM& MK589::getRom() const {
 }
 
 void MK589::do_fetch_decode_execute_cycle(const microcommand &mc) {
+
+    std::cerr << "void MK589::do_fetch_decode_execute_cycle:\n";
+    std::cerr << "cur_address:" << mcu.MA.to_string() << "\n";
+
     mcu.X = std::bitset<8> ((mc.M & 0xFF00) >> 8);
     mcu.fetch(mc.AC, mcu.X, mc.FC, mc.LD);
     fetch_cpe(mc.F, mc.K, mc.I, mc.M, mc.ED, mc.EA);
@@ -111,12 +115,16 @@ void MK589::do_fetch_decode_execute_cycle(const microcommand &mc) {
     mcu.fetch_flag(FI);
     mcu.execute_input_flag_logic();
     mcu.execute_next_address_logic();
+    std::cerr << "next_address:\n";
     decode_adr();
 }
 void MK589::decode_adr() {
-    row_adr = (mcu.MA >> 4).to_ulong();
+    std::cerr << "void MK589::decode_adr:" << mcu.MA.to_string()
+              << " <=> ";
+    row_adr = (mcu.MA >> 4).to_ulong(); // XXXXX???? -> 0000XXXXX
     std::string ma = mcu.MA.to_string();
-    col_adr = (mcu.MA & std::bitset<9> {0b000001111}).to_ulong();
+    col_adr = (mcu.MA & std::bitset<9> {0b000001111}).to_ulong(); // ?????YYYY
+    std::cerr << row_adr << "-" << col_adr << "\n";
 }
 
 size_t MK589::get_row_adr() {

@@ -32,6 +32,8 @@ public:
     Model model;
 
     int cur_command_number = 0;
+    int cur_microcommand_in_cur_command = 0;
+
     MainWindow* mainWindow = nullptr;
 
     void prepareISAWindowText();
@@ -44,7 +46,13 @@ public:
     // void putScannedProgramToItems();
     void displayScannedProgram();
 
-    void displayTracker(int, int);
+    void displayTrackerCommands(int);
+    void undisplayTrackerCommands(int);
+
+    void displayTrackerMicroCommand(int);
+    void undisplayTrackerMicroCommand(int);
+
+    void showCurrentMicroListing();
 
     std::pair<size_t, size_t> with_command_execute_microcommand(size_t row, size_t col, bool&);
 
@@ -137,7 +145,7 @@ private:
 
     std::string current_filename = "";
 
-// public:
+public:
     //
     // using Code = size_t;
     // using Name = std::string;
@@ -150,7 +158,8 @@ private:
     // std::list<CalledCommand> program = {};  // CalledCommand: Code, Arg1, Arg2
 
     // std::vector<std::vector<QTableWidgetItem*>> command_pool_widget_matrix = {};
-    // std::vector<std::vector<QTableWidgetItem*>> command_list_widget_matrix = {};
+    std::vector<MainWindow::Address> selected_command_microcommands = {};
+    std::vector<std::vector<QTableWidgetItem*>> command_list_widget_matrix = {};
 };
 
 #endif // COMMANDMODEWINDOW_H
