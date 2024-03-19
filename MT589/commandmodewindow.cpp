@@ -320,6 +320,8 @@ void CommandModeWindow::showCurrentMicroListing() {
 
 void CommandModeWindow::on_stepButton_clicked()
 {
+    std::cerr<<"void CommandModeWindow::on_stepButton_clicked:\n";
+
     if (!loaded) { return; }
     loaded = false;
 
@@ -328,14 +330,16 @@ void CommandModeWindow::on_stepButton_clicked()
     }
 
     auto curPoint = model.currentPoint;
+    std::cerr << "cur point: " << curPoint.row << "-" << curPoint.col << "\n";
 
     displayTrackerCommands(cur_command_number);
-    undisplayTrackerMicroCommand(cur_microcommand_in_cur_command);
+    // undisplayTrackerMicroCommand(cur_microcommand_in_cur_command);
 
     bool filler = false;
     // size_t r = mk.get_row_adr();
     // size_t c = mk.get_col_adr();
     // auto command_address = Point(r, c);
+    std::cerr<<"gonna launch wcem:"<<curPoint.row<<"-"<<curPoint.col<<"\n";
     auto [row, column] = with_command_execute_microcommand(curPoint.row, curPoint.col, filler);
     ++cur_microcommand_in_cur_command;
 
@@ -344,20 +348,22 @@ void CommandModeWindow::on_stepButton_clicked()
         if (cur_command_number == mk.rom.program.size() - 1) {
             on_resetButton_clicked();
             cur_command_number = 0;
-            return;
         } else {
             ++cur_command_number;
-            std::cerr<<"will be next command:";
-            auto nextCommand = mk.getRom().program[cur_command_number];
-            model.currentPoint = Point(nextCommand.first, nextCommand.second);
-            std::cerr<<model.currentPoint.row<<"-"<<model.currentPoint.col<<"\n";
-
-            mk.mcu.MA = mainWindow->convertPointToBitset(Point(model.currentPoint.row, model.currentPoint.col));
-            mk.mcu.MPAR = mainWindow->convertPointToBitset(Point(model.currentPoint.row, model.currentPoint.col)); // ?
         }
+        std::cerr<<"will be next command:";
+        auto nextCommand = mk.getRom().program[cur_command_number];
+        model.currentPoint = Point(nextCommand.first, nextCommand.second);
+        std::cerr<<model.currentPoint.row<<"-"<<model.currentPoint.col<<"\n";
+
+        mk.mcu.MA = mainWindow->convertPointToBitset(Point(model.currentPoint.row, model.currentPoint.col));
+        mk.mcu.MPAR = mainWindow->convertPointToBitset(Point(model.currentPoint.row, model.currentPoint.col)); // ?
     }
 
-    displayTrackerMicroCommand(cur_microcommand_in_cur_command);
+    // std::cerr<<"mk.mcu.MA:"<<mk.mcu.MA.to_string()<<"\n";
+    // std::cerr<<"mk.mcu.MPAR"<<mk.mcu.MPAR.to_string()<<"\n";
+
+    // displayTrackerMicroCommand(cur_microcommand_in_cur_command);
 
     loaded = true;
 }
