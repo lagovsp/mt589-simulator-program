@@ -15,7 +15,7 @@ public:
     MK589& operator=(const MK589& mk);
     std::vector<CPE> cpe_arr;
     ROM rom {}; // rom with microprogramm
-    ROM getRom() const;
+    const ROM& getRom() const;
     RAM ram {}; // read/write memory
     MCU mcu {};
     void reset();
@@ -35,6 +35,8 @@ public:
     //====================MEMORY
     WORD MEM[0xC];
     WORD MAR;
+
+    // void setAddr(int r, int c);
 private:
     size_t cpe_amount = 8;
     //====================CPE

@@ -1,10 +1,12 @@
 #include "emulator.hpp"
+#include <iostream>
 
 MK589::MK589() {
     cpe_arr.resize(cpe_amount);
     this->reset();
 }
 MK589& MK589::operator=(const MK589 &mk) {
+    std::cerr << "MK589& MK589::operator=:\n";
     // Guard self assignment
     if (this == &mk) {
         return *this;
@@ -25,8 +27,6 @@ MK589& MK589::operator=(const MK589 &mk) {
         cpe_arr[i].reset();
     }
     rom = mk.rom;
-    // rom.memory = mk.rom.memory;
-    rom.program_as_commands_codes_and_args_order = mk.rom.program_as_commands_codes_and_args_order;
     return *this;
 }
 
@@ -69,12 +69,15 @@ void MK589::reset() {
     mcu.reset();
 }
 
-ROM MK589::getRom() const {
-    auto r = rom;
-    return r;
+const ROM& MK589::getRom() const {
+    return rom.get();
 }
 
 void MK589::do_fetch_decode_execute_cycle(const microcommand &mc) {
+
+    std::cerr << "void MK589::do_fetch_decode_execute_cycle:\n";
+    std::cerr << "cur_address:" << mcu.MA.to_string() << "\n";
+
     mcu.X = std::bitset<8> ((mc.M & 0xFF00) >> 8);
     mcu.fetch(mc.AC, mcu.X, mc.FC, mc.LD);
     fetch_cpe(mc.F, mc.K, mc.I, mc.M, mc.ED, mc.EA);
@@ -112,13 +115,22 @@ void MK589::do_fetch_decode_execute_cycle(const microcommand &mc) {
     mcu.fetch_flag(FI);
     mcu.execute_input_flag_logic();
     mcu.execute_next_address_logic();
+    std::cerr << "next_address:\n";
     decode_adr();
 }
 void MK589::decode_adr() {
-    row_adr = (mcu.MA >> 4).to_ulong();
+    std::cerr << "void MK589::decode_adr:" << mcu.MA.to_string()
+              << " <=> ";
+    row_adr = (mcu.MA >> 4).to_ulong(); // XXXXX???? -> 0000XXXXX
     std::string ma = mcu.MA.to_string();
-    col_adr = (mcu.MA & std::bitset<9> {0b000001111}).to_ulong();
+    col_adr = (mcu.MA & std::bitset<9> {0b000001111}).to_ulong(); // ?????YYYY
+    std::cerr << row_adr << "-" << col_adr << "\n";
 }
+
+// void MK589::setAddr(int r, int c) {
+    // row_adr = r;
+    // col_adr = c;
+// }
 
 size_t MK589::get_row_adr() {
     return row_adr;

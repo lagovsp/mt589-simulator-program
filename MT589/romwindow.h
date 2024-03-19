@@ -31,7 +31,7 @@ private:
 
     QBrush transparentColor = QBrush(Qt::transparent);
 
-    std::vector<std::vector<std::shared_ptr<QTableWidgetItem>>> items;
+    std::vector<std::vector<QTableWidgetItem*>> items;
 };
 
 #endif // ROMWINDOW_H

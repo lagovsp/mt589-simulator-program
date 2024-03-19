@@ -7699,7 +7699,7 @@
    <widget class="QLabel" name="label_48">
     <property name="geometry">
      <rect>
-      <x>150</x>
+      <x>100</x>
       <y>0</y>
       <width>141</width>
       <height>41</height>
@@ -10675,7 +10675,7 @@
    <widget class="QLabel" name="label_49">
     <property name="geometry">
      <rect>
-      <x>450</x>
+      <x>420</x>
       <y>0</y>
       <width>141</width>
       <height>41</height>
@@ -11171,7 +11171,7 @@
      <enum>Qt::MarkdownText</enum>
     </property>
    </widget>
-   <widget class="QTableWidget" name="currentCommandWidget">
+   <widget class="QTableWidget" name="currentCommandMicroListingWidget">
     <property name="geometry">
      <rect>
       <x>750</x>

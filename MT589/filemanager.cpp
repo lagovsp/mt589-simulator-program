@@ -87,27 +87,39 @@ fm::programm_data fm::get_data(const std::string& filename) {
 
             // Upgrade to command mode
             command.tag = command_data["Tag"].get<std::string>();
+            if (command_data["Tag"].get<std::string>() != "") { ++commands; }
             command.is_command_entrypoint = command_data["is_command_entrypoint"].get<bool>();
             if (command_data["is_command_entrypoint"].get<bool>() == true) { ++commands; }
-            // std::cerr<<"READ TAG"<<command.tag<<" ";
-            command.command_code = command_data["command_code"].get<size_t>();
+            std::cerr<<"Loaded command start tag: " << command.tag << "\n";
 
             mk.rom.write(row, col, command);
         }
     }
-    std::cerr<<"ENTRYPOINTS READ "<<commands<<std::endl;
+    std::cerr << "ENTRYPOINTS READ "<< commands <<std::endl;
+
+    mk.rom.addresses_args_pairs.resize(32);
+    for (size_t it = 0; it < mk.rom.addresses_args_pairs.size(); ++it) {
+        mk.rom.addresses_args_pairs[it].resize(16);
+    }
 
     if (data.contains("program")) {
         json commands_infos = data["program"];
+        for (auto it = commands_infos.begin(); it != commands_infos.end(); ++it) {
+            // auto command_code = (*it)["command_code"].get<size_t>();
+            size_t row = (*it)["address"]["row"].get<size_t>();
+            size_t column = (*it)["address"]["column"].get<size_t>();
+            uint16_t arg1 = (*it)["arg1"].get<uint16_t>();
+            uint16_t arg2 = (*it)["arg2"].get<uint16_t>();
+            std::cerr<<"gonna add command " << mk.getRom().getMicrocommand(row, column).tag << " "
+                      << row << "-" << column << " " << arg1 << " " << arg2 <<"\n";
 
-        for (auto it = commands_infos.cbegin(); it != commands_infos.cend(); ++it) {
-            auto command_code = (*it)["command_code"].get<size_t>();
-            auto arg1 = (*it)["arg1"].get<uint16_t>();
-            auto arg2 = (*it)["arg2"].get<uint16_t>();
-            std::cerr<<"gonna add command "<<command_code<<" "<<arg1<<" "<<arg2<<";;;;";
-            mk.rom.program_as_commands_codes_and_args_order.push_back({command_code, {arg1, arg2}});
-            auto it1 = mk.rom.program_as_commands_codes_and_args_order.back();
-            std::cerr<<"added ccode "<<it1.first<<" arg1 "<<it1.second.first<<" arg2 "<<it1.second.second<<std::endl;
+            mk.rom.program.push_back({row, column});
+            mk.rom.addresses_args_pairs[row][column] = {arg1, arg2};
+
+            auto test = mk.rom.program.back();
+            auto args = mk.rom.addresses_args_pairs[row][column];
+            std::cerr<<"added ccode " << mk.getRom().getMicrocommand(test.first, test.second).tag << " "
+                      << test.first << "-" << test.second << " arg1 " << args.first << " " << args.second <<"\n";
         }
     }
 
@@ -120,7 +132,7 @@ fm::programm_data fm::get_data(const std::string& filename) {
     return prog_data;
 }
 
-void fm::save(const std::string& filename, MK589& mk, int startCol, int startRow) {
+void fm::save(const std::string& filename, MK589& mk, int startRow, int startCol) {
     json data;
     data["start"] = { { "row", startRow }, { "col", startCol }};
     data["matrix"] =  {};
@@ -149,22 +161,29 @@ void fm::save(const std::string& filename, MK589& mk, int startCol, int startRow
 
             // for command name
             command_data["Tag"] = command.tag;
-            command_data["is_command_entrypoint"] = command.is_command_entrypoint;
-            command_data["command_code"] = command.command_code;
+            // command_data["is_command_entrypoint"] = command.is_command_entrypoint;
+            command_data["is_command_entrypoint"] = command.tag == "" ? false : true;
 
             data["matrix"][std::to_string(row) + "-" + std::to_string(col)] = command_data;
         }
     }
 
+    std::cerr << "Saving program to ROM:\n";
     json commands_array = {};
-    for (auto it = mk.rom.program_as_commands_codes_and_args_order.cbegin(); it != mk.rom.program_as_commands_codes_and_args_order.cend(); ++it) {
+    for (auto it = mk.rom.program.cbegin(); it != mk.rom.program.cend(); ++it) {
         json command;
-        command["command_code"] = (*it).first;
-        command["arg1"] = (*it).second.first;
-        command["arg2"] = (*it).second.second;
+        auto [row, column] = *it;
+        auto [arg1, arg2] = mk.rom.addresses_args_pairs[row][column];
+
+        std::cerr << "Try " << row << "-" << column << " arg1 " << arg1 << " arg2 " << arg2 << "\n";
+        command["address"]["row"] = row;
+        command["address"]["column"] = column;
+        command["arg1"] = arg1;
+        command["arg2"] = arg2;
         commands_array.push_back(command);
     }
     data["program"] = commands_array;
+    data["mode"] = "microcommand"; // for back-connectivity
     fm::write_to_file(filename, data);
 }
 

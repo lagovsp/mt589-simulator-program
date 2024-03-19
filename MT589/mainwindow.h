@@ -9,6 +9,7 @@
 #include <QTableWidgetItem>
 #include <QAbstractItemView>
 #include <Model.h>
+#include <command.h>
 #include <memory>
 
 QT_BEGIN_NAMESPACE
@@ -48,7 +49,7 @@ public:
 
     void fillInputs();
 
-    void setItemColor(Point point);
+    void setItemColor(const Point& point);
 
     void configUIMode();
 
@@ -62,13 +63,29 @@ public:
 
     void setupItems();
 
+    // Listing for selected cell
+    void putSelectedListToSelectedItems();
+    void displaySelectedCommandListing();
+
+    // Command pool set
+    void setupCommandPool();
+    void putScannedPoolToItems();
+    void displayCommandPool();
+
+    // Stored program listing
+    void scanProgram();
+    void putScannedProgramToItems();
+    void displayScannedProgram();
+
+
+    std::bitset<9> convertPointToBitset(Point p);
     MK589 mk;
 
     Model model = Model();
 
-private slots:
+public slots:
     void on_stepButton_clicked();
-
+private slots:
     void on_runButton_clicked();
 
     void on_boxCPE_currentIndexChanged(int index);
@@ -119,6 +136,13 @@ private slots:
 
     void on_tableWidget_cellChanged(int row, int column);
 
+public:
+    using Code = size_t;
+    using Name = std::string;
+    using Address = std::pair<size_t, size_t>;
+    using Args = std::pair<size_t, size_t>;
+    using CalledCommand = std::pair<Code, Args>;
+
 private:
 
     // UI Objects
@@ -127,22 +151,38 @@ private:
 
     std::vector<QLCDNumber*> regLCDs = {};
 
-    std::vector<std::vector<std::shared_ptr<QTableWidgetItem>>> matrixItems;
+    std::vector<std::vector<QTableWidgetItem*>> romItems;
 
+    // for selected cell command
+    std::vector<Address> selected_commands_addresses;
+    std::vector<std::vector<QTableWidgetItem*>> selectedCommandItems;
+
+public:
     std::vector<QTableWidgetItem*> ramItems;
 
     // States & Data
 
     // Model model = Model();
-
     QBrush commandColor = QBrush(Qt::blue);
     QBrush startColor = QBrush(Qt::green);
-    QBrush traceColor = QBrush(Qt::cyan);
+    QBrush traceColor = QBrush(Qt::darkMagenta);
     QBrush transparentColor = QBrush(Qt::transparent);
 
     QBrush currentRunningColor = QBrush(Qt::red); // run mode
-
+private:
     bool loaded = false;
+
+    bool listingIsBeingChanged = false;
+
+    //
+
+public:
+    // Command: Code, X, Y, Tag
+    //std::list<CalledCommand> program = {};  // CalledCommand: Code, Arg1, Arg2
+
+    // erfe
+    std::vector<std::vector<QTableWidgetItem*>> command_pool_widget_matrix = {};
+    std::vector<std::vector<QTableWidgetItem*>> command_list_widget_matrix = {};
 };
 
 #endif // MAINWINDOW_H

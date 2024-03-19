@@ -1,4 +1,6 @@
 #include "mcu.h"
+#include <iostream>
+#include <ostream>
 
 void MCU::reset() {
     FC_10 = 0b00;
@@ -143,9 +145,15 @@ void MCU::execute_next_address_logic() {
                 }
                 break;
             case JUMP::JCR:
+                std::cerr << "JCR" << std::endl;
                 for (size_t i = 0; i < 4; ++i) {
                     MPAR[i] = AC[i];
                 }
+                std::cerr << "MPAR = ";
+                for (size_t i = 0; i < 9; ++i) {
+                    std::cerr << MPAR[i];
+                }
+                std::cerr << "\n";
 
                 break;
             case JUMP::JCE:
