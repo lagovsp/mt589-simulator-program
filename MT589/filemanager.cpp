@@ -143,6 +143,9 @@ void fm::save(const std::string& filename, MK589& mk, int startRow, int startCol
             json command_data;
 
             command_data["empty"] = command.is_empty();
+            if (col ==15&&row==0) {
+                command_data["empty"] = false;
+            }
             command_data["F"] = command.F.to_string();
             command_data["I"] = command.I;
             command_data["index_F"] = command.index_F;
@@ -152,6 +155,9 @@ void fm::save(const std::string& filename, MK589& mk, int startRow, int startCol
             command_data["address_control"] = command.address_control;
             command_data["RW"] = int(command.RW);
             command_data["LD"] = int(command.LD);
+            if (col ==15&&row==0) {
+                command_data["LD"] = 1;
+            }
             command_data["CS"] = int(command.CS);
             command_data["FC"] = int(command.FC);
             command_data["EA"] = int(command.EA);
